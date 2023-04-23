@@ -1,0 +1,8 @@
+
+# Release
+
+add_custom_target(release
+  COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${MOD_ZIP_FILE}" --format=zip .
+  WORKING_DIRECTORY ${MOD_GAME_DIR}
+  DEPENDS ${CMAKE_PROJECT_NAME}
+  COMMENT "Zipping game_dir for v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")

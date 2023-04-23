@@ -1,0 +1,4 @@
+${MOD_NAME} ${MOD_VERSION_STR}
+Copyright (c) ${CURRENT_YEAR} ${MOD_AUTHOR}. All rights reserved.
+${MOD_LICENSE}
+${MOD_URL}
