@@ -23,7 +23,8 @@ if(EXISTS "${REDSCRIPT_MODULE_IN_FILE}")
     OUTPUT ${REDSCRIPT_MODULE_FILE}
     DEPENDS ${REDSCRIPT_MODULE_TEMP}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${REDSCRIPT_MODULE_TEMP}" "${REDSCRIPT_MODULE_FILE}"
-    COMMENT "Creating redscript module file")
+    COMMENT "Creating redscript module file"
+    USES_TERMINAL)
   add_custom_target(${MOD_SLUG}_redscript_module ${REDSCRIPT_MODULE_FILE})
   set_target_properties(${MOD_SLUG}_redscript_module PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}_redscript_module)
@@ -55,17 +56,17 @@ add_custom_command(
   COMMENT "Linting redscript against pre-compiled prereqs"
   USES_TERMINAL)
 
-add_custom_target(${MOD_SLUG}_lint
+add_custom_target(${MOD_SLUG}_redscript_lint
   DEPENDS ${REDSCRIPT_PREREQ_FILE}
   COMMAND ${REDSCRIPT_CLI_EXE} lint -s ${MOD_REDSCRIPT_DIR} -b ${REDSCRIPT_PREREQ_FILE} && echo "1" > ${REDSCRIPT_LAST_LINT}
   USES_TERMINAL
   )
-set_target_properties(${MOD_SLUG}_lint PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
+set_target_properties(${MOD_SLUG}_redscript_lint PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
 
 add_custom_command(
   OUTPUT ${REDSCRIPT_PACKED_FILE}
   BYPRODUCTS ${REDSCRIPT_PACKED_FILE}
-  DEPENDS lint ${REDSCRIPT_SOURCE_FILES}
+  DEPENDS ${MOD_SLUG}_redscript_lint ${REDSCRIPT_SOURCE_FILES}
   COMMAND ${CMAKE_COMMAND} -D COMMENT_SLUG="//" -D GLOB_EXT="reds" -D HEADER_FILE="${CMAKE_CURRENT_LIST_DIR}/Header.txt" -D PACKED_FILE=${REDSCRIPT_PACKED_FILE} -D SEARCH_FOLDER=${MOD_REDSCRIPT_DIR} -P ${CMAKE_CURRENT_LIST_DIR}/PackFiles.cmake
   COMMENT "Packing redscript files into one")
 
