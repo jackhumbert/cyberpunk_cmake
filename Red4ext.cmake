@@ -22,7 +22,10 @@ add_custom_command(
 add_custom_target(addresses DEPENDS ${ZOLTAN_ADDRESSES_OUTPUT})
 set_target_properties(addresses PROPERTIES FOLDER Red4ext)
 
-add_compile_definitions(
+add_library(${MOD_SLUG}.dll SHARED ${ZOLTAN_ADDRESSES_OUTPUT})
+set_target_properties(${MOD_SLUG}.dll PROPERTIES FOLDER Red4ext)
+
+target_compile_definitions(${MOD_SLUG}.dll PUBLIC
   # Support Windows 7 and above.
   WINVER=0x0601
   _WIN32_WINNT=0x0601
@@ -47,9 +50,6 @@ add_compile_definitions(
   MOD_VERSION_MINOR=${MOD_VERSION_MINOR}
   MOD_VERSION_PATCH=${MOD_VERSION_PATCH}
 )
-
-add_library(${MOD_SLUG}.dll SHARED ${ZOLTAN_ADDRESSES_OUTPUT})
-set_target_properties(${MOD_SLUG}.dll PROPERTIES FOLDER Red4ext)
 
 set_target_properties(${MOD_SLUG}.dll PROPERTIES OUTPUT_NAME ${MOD_SLUG})
 set_target_properties(${MOD_SLUG}.dll PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
