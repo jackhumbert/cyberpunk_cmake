@@ -33,6 +33,8 @@ foreach(ARCHIVE_XL ${MOD_ARCHIVE_XLS})
   )
 endforeach()
 
-add_custom_target(archives
+add_custom_target(${MOD_SLUG}_archives
   DEPENDS ${MOD_GAME_DIR_ARCHIVES} ${MOD_GAME_DIR_ARCHIVE_XLS}
 )
+set_target_properties(${MOD_SLUG}_archives PROPERTIES FOLDER "Archives")
+add_dependencies(${MOD_SLUG} ${MOD_SLUG}_archives)
