@@ -12,20 +12,14 @@ set(REDSCRIPT_PREREQ_FILE "${PROJECT_BINARY_DIR}/dependencies.redscripts")
 set(REDSCRIPT_LAST_LINT "${PROJECT_BINARY_DIR}/redscript.lint")
 set(REDSCRIPT_PACKED_FILE "${MOD_GAME_DIR}/r6/scripts/${MOD_SLUG}/${MOD_SLUG}.packed.reds")
 set(REDSCRIPT_MODULE_FILE "${MOD_GAME_DIR}/r6/scripts/${MOD_SLUG}/${MOD_SLUG}.module.reds")
-set(REDSCRIPT_MODULE_TEMP "${PROJECT_BINARY_DIR}/${MOD_SLUG}.module.reds")
-set(REDSCRIPT_PRECOMPILED "${PROJECT_SOURCE_DIR}/final.redscripts")
 set(REDSCRIPT_MODULE_IN_FILE "${MOD_REDSCRIPT_DIR}/Module.reds.in")
 set(REDSCRIPT_PRECOMPILE_DIR "${PROJECT_BINARY_DIR}/redscript/precompile")
 
 if(EXISTS "${REDSCRIPT_MODULE_IN_FILE}")
-  configure_file("${REDSCRIPT_MODULE_IN_FILE}" "${REDSCRIPT_MODULE_TEMP}" @ONLY)
-  add_custom_command(
-    OUTPUT ${REDSCRIPT_MODULE_FILE}
-    DEPENDS ${REDSCRIPT_MODULE_TEMP}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${REDSCRIPT_MODULE_TEMP}" "${REDSCRIPT_MODULE_FILE}"
-    COMMENT "Creating redscript module file"
-    USES_TERMINAL)
-  add_custom_target(${MOD_SLUG}_redscript_module ${REDSCRIPT_MODULE_FILE})
+  configure_file("${REDSCRIPT_MODULE_IN_FILE}" "${REDSCRIPT_MODULE_FILE}" @ONLY)
+  add_custom_target(${MOD_SLUG}_redscript_module
+    DEPENDS ${REDSCRIPT_MODULE_FILE}
+    SOURCES ${REDSCRIPT_MODULE_IN_FILE})
   set_target_properties(${MOD_SLUG}_redscript_module PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}_redscript_module)
 endif()
