@@ -1,8 +1,4 @@
 set(MOD_CYBERPUNK_CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
-set(MOD_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
-set(MOD_TOOLS_DIR "${MOD_SOURCE_DIR}/tools")
-set(MOD_GAME_DIR "${MOD_SOURCE_DIR}/game_dir")
-
 set(CYBERPUNK_2077_GAME_DIR "C:/Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077" CACHE STRING "Cyberpunk 2077 game directory")
 set(CYBERPUNK_2077_REDSCRIPT_BACKUP "${CYBERPUNK_2077_GAME_DIR}/r6/cache/final.redscripts.bk" CACHE STRING "final.redscripts.bk file created by Redscript after running it for the first time")
 
@@ -13,7 +9,9 @@ set(MOD_UNINSTALL_LOCATIONS)
 
 string(TIMESTAMP CURRENT_YEAR "%Y")
 
-list(APPEND CMAKE_CONFIGURATION_TYPES "CI")
+list(APPEND CMAKE_CONFIGURATION_TYPES CI Debug Release)
+
+set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE)
 
 #[[
 Configure the `MOD_SLUG` target - uses the following variables:
@@ -22,6 +20,23 @@ Configure the `MOD_SLUG` target - uses the following variables:
 * MOD_NAME
 ]]
 macro(configure_mod)
+  set(MOD_ARGS "${ARGV}")
+  foreach(MOD_ARG ${MOD_ARGS})
+    if(DEFINED MOD_ARG_NAME)
+      # message(STATUS "MOD_${MOD_ARG_NAME}: ${MOD_ARG}")
+      set(MOD_${MOD_ARG_NAME} ${MOD_ARG})
+      unset(MOD_ARG_NAME)
+    else()
+      if(${MOD_ARG} IN_LIST CONFIGURE_MOD_ARG_NAMES)
+        set(MOD_ARG_NAME ${MOD_ARG})
+      endif()
+    endif()
+  endforeach()
+
+  set(MOD_SOURCE_DIR "${PROJECT_SOURCE_DIR}")
+  set(MOD_TOOLS_DIR "${MOD_SOURCE_DIR}/tools")
+  set(MOD_GAME_DIR "${MOD_SOURCE_DIR}/game_dir")
+  
   # load all the components
   file(GLOB CONFIGURE_COMPONENTS RELATIVE "${MOD_CYBERPUNK_CMAKE_MODULE_PATH}" "${MOD_CYBERPUNK_CMAKE_MODULE_PATH}/components/*.cmake" )
   foreach(COMPONENT ${CONFIGURE_COMPONENTS})
@@ -38,12 +53,13 @@ macro(configure_mod)
   if(PROJECT_IS_TOP_LEVEL)
     set(FOLDER_PREFIX)
     # set(MOD_TARGET_PREFIX)
+    add_custom_target(${MOD_SLUG} ALL)
   else()
     set(FOLDER_PREFIX "${MOD_NAME}/")
     # set(MOD_TARGET_PREFIX "${MOD_SLUG}_")
+    add_custom_target(${MOD_SLUG})
   endif()
 
-  add_custom_target(${MOD_SLUG} ALL)
   set_target_properties(${MOD_SLUG} PROPERTIES FOLDER "${FOLDER_PREFIX}")
 endmacro()
 

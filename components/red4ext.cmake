@@ -62,23 +62,7 @@ macro(configure_red4ext)
   list(APPEND CMAKE_MODULE_PATH "${MOD_RED4EXT_SDK_DIR}/cmake")
   include(GetGameVersion)
 
-  # project(${MOD_SLUG}.dll LANGUAGES CXX)
-  # Addresses from Zoltan
-  if(DEFINED ZOLTAN_ADDRESSES_OUTPUT AND DEFINED ZOLTAN_USER_SIGNATURES)
-    add_custom_command(
-      OUTPUT ${ZOLTAN_ADDRESSES_OUTPUT}
-      DEPENDS ${ZOLTAN_USER_SIGNATURES}
-      COMMAND ${ZOLTAN_CLANG_EXE}
-      ARGS ${ZOLTAN_USER_SIGNATURES} ${CYBERPUNK_2077_EXE} -f "std=c++20" -f "I${MOD_RED4EXT_SDK_DIR}/include" --c-output "${ZOLTAN_ADDRESSES_OUTPUT}" --safe-addr
-      COMMENT "Finding binary addresses of declared functions in ${ZOLTAN_USER_SIGNATURES}"
-    )
-
-    add_custom_target(addresses DEPENDS ${ZOLTAN_ADDRESSES_OUTPUT})
-    set_target_properties(addresses PROPERTIES FOLDER Red4ext)
-    add_library(${MOD_SLUG}.dll SHARED ${ZOLTAN_ADDRESSES_OUTPUT})
-  else()
-    add_library(${MOD_SLUG}.dll SHARED)
-  endif()
+  add_library(${MOD_SLUG}.dll SHARED)
 
   set_target_properties(${MOD_SLUG}.dll PROPERTIES FOLDER Red4ext)
 
@@ -134,13 +118,13 @@ macro(configure_red4ext)
   set_target_properties(${MOD_SLUG}.dll PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
 
   source_group(_CMake REGULAR_EXPRESSION cmake_pch.*)
-  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_FILES} ${RC_FILES})
+  source_group(TREE "${MOD_RED4EXT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_FILES} ${RC_FILES})
 
-  target_include_directories(${MOD_SLUG}.dll PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+  target_include_directories(${MOD_SLUG}.dll PUBLIC ${MOD_RED4EXT_SOURCE_DIR})
   target_sources(${MOD_SLUG}.dll PRIVATE ${HEADER_FILES} ${SOURCE_FILES} ${RC_FILES} ${MOD_VERSIONINFO_RC_FILE})
 
   if(EXISTS ${MOD_RED4EXT_SOURCE_DIR}/stdafx.hpp)
-    target_precompile_headers(${MOD_SLUG}.dll PUBLIC stdafx.hpp)
+    target_precompile_headers(${MOD_SLUG}.dll PUBLIC ${MOD_RED4EXT_SOURCE_DIR}/stdafx.hpp)
   endif()
 
   if(DEFINED MOD_RED4EXT_SDK_DIR)
@@ -160,4 +144,18 @@ macro(configure_red4ext)
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}.dll)
   list(APPEND MOD_GAME_DIR_FILES ${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG}/${MOD_SLUG}.dll)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
+endmacro()
+
+macro(configure_zoltan ZOLTAN_SIGNATURES ZOLTAN_ADDRESSES)
+  add_custom_command(
+    OUTPUT ${ZOLTAN_ADDRESSES}
+    DEPENDS ${ZOLTAN_SIGNATURES}
+    COMMAND ${ZOLTAN_CLANG_EXE}
+    ARGS ${ZOLTAN_SIGNATURES} ${CYBERPUNK_2077_EXE} -f "std=c++20" -f "I${MOD_RED4EXT_SDK_DIR}/include" --c-output "${ZOLTAN_ADDRESSES}" --safe-addr
+    COMMENT "Finding binary addresses of declared functions in ${ZOLTAN_SIGNATURES}"
+  )
+
+  add_custom_target(addresses DEPENDS ${ZOLTAN_ADDRESSES})
+  set_target_properties(addresses PROPERTIES FOLDER Red4ext)
+  add_dependencies(${MOD_SLUG}.dll addresses)
 endmacro()
