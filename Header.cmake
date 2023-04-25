@@ -1,4 +1,5 @@
 # Header generation
 
-string(TIMESTAMP CURRENT_YEAR "%Y")
-configure_file(${CMAKE_CURRENT_LIST_DIR}/Header.txt.in ${CMAKE_CURRENT_LIST_DIR}/Header.txt)
+set(MOD_HEADER_TXT_FILE ${CMAKE_CURRENT_LIST_DIR}/files/Header.txt)
+
+configure_file(${MOD_HEADER_TXT_FILE}.in ${MOD_HEADER_TXT_FILE})
