@@ -58,6 +58,7 @@ macro(configure_red4ext)
 
   find_package(RED4ext.SDK)
   message(STATUS "Found RED4ext.SDK: ${MOD_RED4EXT_SDK_DIR}")
+  
   list(APPEND CMAKE_MODULE_PATH "${MOD_RED4EXT_SDK_DIR}/cmake")
   include(GetGameVersion)
 

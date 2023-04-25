@@ -80,19 +80,28 @@ macro(configure_redscript REDSCRIPT_DIR)
     set(REDSCRIPT_DEPENDENCIES_SOURCE_FILES ${REDSCRIPT_DEPENDENCIES_SOURCE_FILES} CACHE INTERNAL "Files used in compiling redscript dependencies")
   endif()
 
-  add_custom_command(
-    OUTPUT ${REDSCRIPT_LAST_LINT}
-    DEPENDS ${REDSCRIPT_PREREQ_FILE} ${REDSCRIPT_SOURCE_FILES}
-    COMMAND ${REDSCRIPT_CLI_EXE} lint -s ${MOD_REDSCRIPT_DIR} -b ${REDSCRIPT_PREREQ_FILE} && echo "1" > ${REDSCRIPT_LAST_LINT}
-    COMMENT "Linting redscript against pre-compiled prereqs"
-    USES_TERMINAL)
+  if(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "CI")
+    add_custom_command(
+      OUTPUT ${REDSCRIPT_LAST_LINT}
+      DEPENDS ${REDSCRIPT_PREREQ_FILE} ${REDSCRIPT_SOURCE_FILES}
+      COMMAND ${REDSCRIPT_CLI_EXE} lint -s ${MOD_REDSCRIPT_DIR} -b ${REDSCRIPT_PREREQ_FILE} && echo "1" > ${REDSCRIPT_LAST_LINT}
+      COMMENT "Linting redscript against pre-compiled prereqs"
+      USES_TERMINAL)
 
-  add_custom_target(${MOD_SLUG}_redscript_lint
-    DEPENDS ${REDSCRIPT_PREREQ_FILE}
-    COMMAND ${REDSCRIPT_CLI_EXE} lint -s ${MOD_REDSCRIPT_DIR} -b ${REDSCRIPT_PREREQ_FILE} && echo "1" > ${REDSCRIPT_LAST_LINT}
-    USES_TERMINAL
-  )
-  set_target_properties(${MOD_SLUG}_redscript_lint PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
+    add_custom_target(${MOD_SLUG}_redscript_lint
+      DEPENDS ${REDSCRIPT_PREREQ_FILE}
+      COMMAND ${REDSCRIPT_CLI_EXE} lint -s ${MOD_REDSCRIPT_DIR} -b ${REDSCRIPT_PREREQ_FILE} && echo "1" > ${REDSCRIPT_LAST_LINT}
+      USES_TERMINAL)
+    set_target_properties(${MOD_SLUG}_redscript_lint PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
+  else()
+    add_custom_command(
+      OUTPUT ${REDSCRIPT_LAST_LINT}
+      COMMAND echo "1" > ${REDSCRIPT_LAST_LINT}
+      USES_TERMINAL)
+    add_custom_target(${MOD_SLUG}_redscript_lint
+      COMMAND echo "1" > ${REDSCRIPT_LAST_LINT}
+      USES_TERMINAL)
+  endif()
 
   add_custom_command(
     OUTPUT ${MOD_GAME_DIR_REDSCRIPT_PACKED_FILE}
@@ -103,8 +112,7 @@ macro(configure_redscript REDSCRIPT_DIR)
 
   add_custom_target(${MOD_SLUG}_redscript
     DEPENDS ${REDSCRIPT_LAST_LINT} ${MOD_GAME_DIR_REDSCRIPT_PACKED_FILE}
-    SOURCES ${REDSCRIPT_SOURCE_FILES}
-  )
+    SOURCES ${REDSCRIPT_SOURCE_FILES})
   set_target_properties(${MOD_SLUG}_redscript PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
   list(APPEND MOD_GAME_DIR_FILES ${MOD_GAME_DIR_REDSCRIPT_PACKED_FILE})
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}_redscript)
