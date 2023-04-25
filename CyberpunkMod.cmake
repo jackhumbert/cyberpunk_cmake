@@ -13,6 +13,8 @@ set(MOD_UNINSTALL_LOCATIONS)
 
 string(TIMESTAMP CURRENT_YEAR "%Y")
 
+list(APPEND CMAKE_CONFIGURATION_TYPES "CI")
+
 #[[
 Configure the `MOD_SLUG` target - uses the following variables:
 * MOD_SLUG
