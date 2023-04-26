@@ -147,15 +147,40 @@ macro(configure_red4ext)
 endmacro()
 
 macro(configure_zoltan ZOLTAN_SIGNATURES ZOLTAN_ADDRESSES)
-  add_custom_command(
-    OUTPUT ${ZOLTAN_ADDRESSES}
-    DEPENDS ${ZOLTAN_SIGNATURES}
-    COMMAND ${ZOLTAN_CLANG_EXE}
-    ARGS ${ZOLTAN_SIGNATURES} ${CYBERPUNK_2077_EXE} -f "std=c++20" -f "I${MOD_RED4EXT_SDK_DIR}/include" --c-output "${ZOLTAN_ADDRESSES}" --safe-addr
-    COMMENT "Finding binary addresses of declared functions in ${ZOLTAN_SIGNATURES}"
-  )
+  message(STATUS "Configuring Zoltan")
+  set(MOD_ZOLTAN_SIGNATURES "${ZOLTAN_SIGNATURES}")
+  set(MOD_ZOLTAN_ADDRESSES "${ZOLTAN_ADDRESSES}")
+  cmake_path(IS_RELATIVE MOD_ZOLTAN_SIGNATURES IS_SIGNATURES_RELATIVE)
+  if (IS_SIGNATURES_RELATIVE)
+    set(MOD_ZOLTAN_SIGNATURES ${MOD_RED4EXT_SOURCE_DIR}/${MOD_ZOLTAN_SIGNATURES})
+  endif()
+  cmake_path(IS_RELATIVE MOD_ZOLTAN_ADDRESSES IS_ADDRESSES_RELATIVE)
+  if (IS_ADDRESSES_RELATIVE)
+    set(MOD_ZOLTAN_ADDRESSES ${MOD_RED4EXT_SOURCE_DIR}/${MOD_ZOLTAN_ADDRESSES})
+  endif()
+  if(EXISTS ${MOD_ZOLTAN_SIGNATURES})
+    message(STATUS "  Found signature file: ${MOD_ZOLTAN_SIGNATURES}")
+  else()
+    message(STATUS "  Warning: signature file doesn't exist: ${MOD_ZOLTAN_SIGNATURES}")
+  endif()
+  message(STATUS "  Will create addresses file: ${MOD_ZOLTAN_ADDRESSES}")
+  if(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "CI")
+    add_custom_command(
+      OUTPUT ${MOD_ZOLTAN_ADDRESSES}
+      DEPENDS ${MOD_ZOLTAN_SIGNATURES}
+      COMMAND ${ZOLTAN_CLANG_EXE}
+      ARGS ${MOD_ZOLTAN_SIGNATURES} ${CYBERPUNK_2077_EXE} -f "std=c++20" -f "I${MOD_RED4EXT_SDK_DIR}/include" --c-output "${MOD_ZOLTAN_ADDRESSES}" --safe-addr
+      COMMENT "Finding binary addresses of declared functions in ${MOD_ZOLTAN_SIGNATURES}"
+    )
 
-  add_custom_target(addresses DEPENDS ${ZOLTAN_ADDRESSES})
-  set_target_properties(addresses PROPERTIES FOLDER Red4ext)
-  add_dependencies(${MOD_SLUG}.dll addresses)
+    add_custom_target(${MOD_SLUG}_addresses DEPENDS ${MOD_ZOLTAN_ADDRESSES})
+    set_target_properties(${MOD_SLUG}_addresses PROPERTIES FOLDER Red4ext)
+    add_dependencies(${MOD_SLUG}.dll ${MOD_SLUG}_addresses)
+  else()
+    if(EXISTS ${MOD_ZOLTAN_ADDRESSES})
+      message(STATUS "  Found addresses file: ${MOD_ZOLTAN_ADDRESSES}")
+    else()
+      message(SEND_ERROR "Addresses file doesn't exist: ${MOD_ZOLTAN_ADDRESSES}")
+    endif()
+  endif()
 endmacro()
