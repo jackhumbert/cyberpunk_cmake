@@ -12,7 +12,11 @@ macro(configure_inputs INPUT_FILE)
     set(MOD_INPUTS_FILE ${INPUTS_FILE_RAW})
   endif()
 
-  message(STATUS "Configure input file: ${MOD_INPUTS_FILE}")
+  if(EXISTS ${MOD_INPUTS_FILE})
+    message(STATUS "Configure input file: ${MOD_INPUTS_FILE}")
+  else()
+    message(STATUS "Configure input file: ${MOD_INPUTS_FILE} - Warning: file does not exist")
+  endif()
 
   add_custom_command(
     OUTPUT ${MOD_GAME_DIR_INPUT_FILE}
