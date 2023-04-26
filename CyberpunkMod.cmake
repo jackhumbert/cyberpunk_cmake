@@ -2,6 +2,8 @@ set(CYBERPUNK_CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 set(CYBERPUNK_CMAKE_SCRIPTS ${CYBERPUNK_CMAKE_MODULE_PATH}/scripts)
 set(CYBERPUNK_CMAKE_FILES ${CYBERPUNK_CMAKE_MODULE_PATH}/files)
 
+set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install)
+
 set(CYBERPUNK_2077_GAME_DIR "C:/Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077" CACHE STRING "Cyberpunk 2077 game directory")
 set(CYBERPUNK_2077_REDSCRIPT_BACKUP "${CYBERPUNK_2077_GAME_DIR}/r6/cache/final.redscripts.bk" CACHE STRING "final.redscripts.bk file created by Redscript after running it for the first time")
 

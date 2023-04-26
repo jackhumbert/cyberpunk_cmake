@@ -91,7 +91,9 @@ macro(configure_red4ext)
     # _DEBUG
     # _WINDLL
     _CRT_SECURE_NO_WARNINGS
-
+  )
+  
+  target_compile_definitions(${MOD_SLUG}.dll PRIVATE
     MOD_VERSION_STR="${MOD_VERSION_STR}"
     MOD_VERSION_MAJOR=${MOD_VERSION_MAJOR}
     MOD_VERSION_MINOR=${MOD_VERSION_MINOR}
