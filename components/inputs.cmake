@@ -30,7 +30,7 @@ macro(configure_inputs INPUT_FILE)
     DEPENDS ${MOD_GAME_DIR_INPUT_FILE}
   )
 
-  list(APPEND MOD_GAME_DIR_FILES ${MOD_GAME_DIR_INPUT_FILE})
+  list(APPEND ${MOD_SLUG}_GAME_DIR_FILES ${MOD_GAME_DIR_INPUT_FILE})
 
   set_target_properties(${MOD_SLUG}_input PROPERTIES FOLDER "Red4ext/Dependencies")
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}_input)
