@@ -18,7 +18,7 @@ This is a set of CMake scripts & tools to make creating, developing, depending o
 * Automatic uninstall.bat script generation at relevant locations (r6/scripts & red4ext/plugins)
 * Easily generate releases with custom formats
 
-## Example CmakeLists.txt
+## Example CMakeLists.txt
 
 ```cmake
 cmake_minimum_required(VERSION 3.24)
