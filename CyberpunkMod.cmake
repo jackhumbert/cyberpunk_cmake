@@ -1,4 +1,7 @@
-set(MOD_CYBERPUNK_CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+set(CYBERPUNK_CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+set(CYBERPUNK_CMAKE_SCRIPTS ${CYBERPUNK_CMAKE_MODULE_PATH}/scripts)
+set(CYBERPUNK_CMAKE_FILES ${CYBERPUNK_CMAKE_MODULE_PATH}/files)
+
 set(CYBERPUNK_2077_GAME_DIR "C:/Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077" CACHE STRING "Cyberpunk 2077 game directory")
 set(CYBERPUNK_2077_REDSCRIPT_BACKUP "${CYBERPUNK_2077_GAME_DIR}/r6/cache/final.redscripts.bk" CACHE STRING "final.redscripts.bk file created by Redscript after running it for the first time")
 
@@ -20,6 +23,7 @@ Configure the `MOD_SLUG` target - uses the following variables:
 * MOD_NAME
 ]]
 macro(configure_mod)
+  set(MOD_SLUG "${PROJECT_NAME}")
   set(MOD_ARGS "${ARGV}")
   foreach(MOD_ARG ${MOD_ARGS})
     if(DEFINED MOD_ARG_NAME)
@@ -38,7 +42,7 @@ macro(configure_mod)
   set(MOD_GAME_DIR "${MOD_SOURCE_DIR}/game_dir")
   
   # load all the components
-  file(GLOB CONFIGURE_COMPONENTS RELATIVE "${MOD_CYBERPUNK_CMAKE_MODULE_PATH}" "${MOD_CYBERPUNK_CMAKE_MODULE_PATH}/components/*.cmake" )
+  file(GLOB CONFIGURE_COMPONENTS RELATIVE "${CYBERPUNK_CMAKE_MODULE_PATH}" "${CYBERPUNK_CMAKE_MODULE_PATH}/components/*.cmake" )
   foreach(COMPONENT ${CONFIGURE_COMPONENTS})
     get_filename_component(COMPONENT_NAME ${COMPONENT} NAME_WLE)
     # message(STATUS "Found component: ${COMPONENT_NAME}")

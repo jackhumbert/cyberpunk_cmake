@@ -1,5 +1,5 @@
 set(MOD_UNINSTALL_FILENAME "${MOD_SLUG}_uninstall.bat")
-set(MOD_UNINSTALL_BAT_IN "${MOD_CYBERPUNK_CMAKE_MODULE_PATH}/files/uninstall.bat.in")
+set(MOD_UNINSTALL_BAT_IN "${CYBERPUNK_CMAKE_FILES}/uninstall.bat.in")
 
 macro(configure_uninstall)
     foreach(LOCATION ${MOD_UNINSTALL_LOCATIONS})
