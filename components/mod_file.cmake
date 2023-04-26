@@ -1,0 +1,15 @@
+macro(configure_mod_file IN_FILE OUT_FILE)
+    set(MOD_IN_FILE "${IN_FILE}")
+    set(MOD_OUT_FILE "${OUT_FILE}")
+    cmake_path(IS_RELATIVE MOD_IN_FILE IS_IN_RELATIVE)
+    if(IS_IN_RELATIVE)
+        set(MOD_IN_FILE ${MOD_SOURCE_DIR}/${MOD_IN_FILE})
+    endif()
+
+    cmake_path(IS_RELATIVE MOD_OUT_FILE IS_OUT_RELATIVE)
+    if(IS_OUT_RELATIVE)
+        set(MOD_OUT_FILE ${MOD_GAME_DIR}/${MOD_OUT_FILE})
+    endif()
+
+    configure_file("${MOD_IN_FILE}" "${MOD_OUT_FILE}" COPYONLY)
+endmacro()

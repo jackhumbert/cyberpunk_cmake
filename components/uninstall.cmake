@@ -42,3 +42,17 @@ macro(configure_uninstall)
         configure_file(${MOD_UNINSTALL_BAT_IN} ${LOCATION}/${MOD_UNINSTALL_FILENAME})
     endforeach()
 endmacro()
+
+#[[Configures a particular file to uninstall
+Must be called before `configure_uninstall`
+]]
+macro(configure_uninstall_file REL_PATH)
+list(APPEND ${MOD_SLUG}_GAME_DIR_FILES "${MOD_GAME_DIR}/${REL_PATH}")
+endmacro()
+
+#[[Configures a particular folder to uninstall
+Must be called before `configure_uninstall`
+]]
+macro(configure_uninstall_folder REL_PATH)
+list(APPEND ${MOD_SLUG}_GAME_DIR_FOLDERS "${MOD_GAME_DIR}/${REL_PATH}")
+endmacro()
