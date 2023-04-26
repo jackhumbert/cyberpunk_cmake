@@ -1,7 +1,7 @@
 set(MOD_UNINSTALL_FILENAME "${MOD_SLUG}_uninstall.bat")
 set(MOD_UNINSTALL_BAT_IN "${CYBERPUNK_CMAKE_FILES}/uninstall.bat.in")
 
-#[[ Configure uninstall bat scripts
+#[[Configures uninstall bat scripts
 Must be called last, since this depends on the other components adding paths to 
 `${MOD_SLUG}_GAME_DIR_FILES`, `${MOD_SLUG}_GAME_DIR_FOLDERS`, and `{${MOD_SLUG}_UNINSTALL_LOCATIONS`
 ]]

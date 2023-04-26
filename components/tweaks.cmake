@@ -1,9 +1,13 @@
-# MOD_TWEAKS_SOURCE_DIR
-# MOD_GAME_DIR
-# MOD_SLUG
-
 set(MOD_GAME_DIR_TWEAKS_PACKED_FILE "${MOD_GAME_DIR}/r6/tweaks/${MOD_SLUG}.yaml")
 
+#[[Configures the tweaks to be packed into `MOD_GAME_DIR_TWEAKS_PACKED_FILE` with the directory passed:
+configure_tweaks(src/tweaks)
+Uses these variables:
+* MOD_SLUG
+* MOD_GAME_DIR
+Sets these variables:
+* MOD_TWEAKS_SOURCE_DIR
+]]
 macro(configure_tweaks TWEAKS_SOURCE_DIR)
   set(TWEAKS_DIR_RAW ${TWEAKS_SOURCE_DIR})
   cmake_path(IS_RELATIVE TWEAKS_DIR_RAW IS_TWEAKS_DIR_RELATIVE)

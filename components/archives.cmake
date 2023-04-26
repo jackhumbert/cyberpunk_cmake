@@ -1,10 +1,11 @@
 set(MOD_GAME_DIR_ARCHIVES_DIR "${MOD_GAME_DIR}/archive/pc/mod")
 
-#[[
-Configures .archive & .archive.xl files. Use these variables:
+#[[Configures .archive & .archive.xl files. Accepts any number of files as arguments, like:
+configure_archives(mod.archive mod2.archive mod.archive.xl)
+Uses these variables:
 * MOD_SLUG
 * MOD_GAME_DIR
-Can be configure to use a different install folder via `MOD_GAME_DIR_ARCHIVES_DIR`.
+Can be configured to use a different install folder via `MOD_GAME_DIR_ARCHIVES_DIR`.
 Sets these variables:
 * MOD_GAME_DIR_ARCHIVES
 * MOD_GAME_DIR_ARCHIVE_XL

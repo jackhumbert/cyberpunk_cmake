@@ -1,7 +1,13 @@
-# MOD_SLUG
-# MOD_ZIP_FILE
-# MOD_VERSION_STR
-# MOD_GAME_DIR
+#[[Configures the release zip file with the path passed:
+configure_release(${MOD_SLUG}_${MOD_VERSION_STR}.zip)
+configure_release(release.zip)
+Uses these variables:
+* MOD_SLUG
+* MOD_VERSION_STR
+* MOD_GAME_DIR
+Sets these variables:
+* MOD_ZIP_FILE
+]]
 macro(configure_release ZIP_FILE)
   set(MOD_ZIP_FILE_RAW ${ZIP_FILE})
   cmake_path(IS_RELATIVE MOD_ZIP_FILE_RAW FILENAME_IS_RELATIVE)

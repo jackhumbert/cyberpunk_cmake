@@ -1,8 +1,10 @@
-# MOD_GAME_DIR
-# MOD_INPUTS_FILE
+set(MOD_GAME_DIR_INPUT_FILE ${MOD_GAME_DIR}/r6/input/${MOD_SLUG}.xml)
 
-set(MOD_GAME_DIR_INPUT_FILE ${MOD_GAME_DIR}/r6/input/${CMAKE_PROJECT_NAME}.xml)
-
+#[[Configures one input file to be placed at `MOD_GAME_DIR_INPUT_FILE`. Accepts the path of the input file:
+configure_inputs(mod.xml)
+Sets these variables:
+* MOD_GAME_DIR_INPUT_FILE
+]]
 macro(configure_inputs INPUT_FILE)
   set(INPUTS_FILE_RAW ${INPUT_FILE})
   cmake_path(IS_RELATIVE INPUTS_FILE_RAW IS_INPUTS_FILE_RAW)

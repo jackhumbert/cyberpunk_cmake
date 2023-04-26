@@ -3,10 +3,13 @@ set(MOD_VERSIONINFO_RC_FILE ${CYBERPUNK_CMAKE_FILES}/versioninfo.rc)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# inputs
-# ZOLTAN_USER_SIGNATURES
-# ZOLTAN_ADDRESSES_OUTPUT
-# ZOLTAN_CLANG_EXE
+#[[Configures a RED4ext plugin at the location passed:
+configure_redscript(src/red4ext)
+Uses these variables:
+* MOD_GAME_DIR
+Sets these variables:
+* MOD_RED4EXT_SOURCE_DIR
+]]
 macro(configure_red4ext)
   set(RED4EXT_DIR_RAW ${ARGV0})
 

@@ -13,11 +13,14 @@ list(APPEND CMAKE_CONFIGURATION_TYPES CI Debug Release)
 
 set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE)
 
-#[[
-Configure the `MOD_SLUG` target - uses the following variables:
-* MOD_SLUG
-* MOD_SOURCE_DIR
-* MOD_NAME
+#[[Configures the main `MOD_SLUG` target - can be passed a number of argument name/value pairs:
+* NAME
+* SLUG
+* DESCRIPTION
+* URL
+* AUTHOR
+* VERSION
+* LICENSE
 ]]
 macro(configure_mod)
   set(MOD_SLUG "${PROJECT_NAME}")

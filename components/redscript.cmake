@@ -10,8 +10,8 @@ set(MOD_GAME_DIR_REDSCRIPT_DIR "${MOD_GAME_DIR}/r6/scripts")
 set(MOD_GAME_DIR_REDSCRIPT_PACKED_FILE "${MOD_GAME_DIR_REDSCRIPT_DIR}/${MOD_SLUG}/${MOD_SLUG}.packed.reds")
 set(MOD_GAME_DIR_REDSCRIPT_MODULE_FILE "${MOD_GAME_DIR_REDSCRIPT_DIR}/${MOD_SLUG}/${MOD_SLUG}.module.reds")
 
-#[[
-Configures redscript
+#[[Configures redscript at the location passed:
+configure_redscipt(src/redscript)
 Sets `MOD_REDSCRIPT_DIR` and uses the following variables:
 * MOD_SLUG
 * MOD_TOOLS_DIR
