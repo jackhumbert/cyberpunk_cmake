@@ -11,5 +11,6 @@ macro(configure_mod_file IN_FILE OUT_FILE)
         set(MOD_OUT_FILE ${MOD_GAME_DIR}/${MOD_OUT_FILE})
     endif()
 
+    list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_OUT_FILE})
     configure_file("${MOD_IN_FILE}" "${MOD_OUT_FILE}" COPYONLY)
 endmacro()

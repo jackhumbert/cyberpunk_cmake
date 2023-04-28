@@ -13,11 +13,12 @@ string(TIMESTAMP CURRENT_YEAR "%Y")
 
 list(APPEND CMAKE_CONFIGURATION_TYPES CI Debug Release)
 
-set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE)
+set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE PREFIX)
 
-#[[Configures the main `MOD_SLUG` target - can be passed a number of argument name/value pairs:
+#[[Configures the main `MOD_SLUG` target - can be passed a number of argument name/value pairs, which sets the MOD_<name> variable:
 * NAME
 * SLUG
+* PREFIX
 * DESCRIPTION
 * URL
 * AUTHOR
@@ -27,6 +28,7 @@ set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE)
 macro(configure_mod)
   set(MOD_SLUG "${PROJECT_NAME}")
   set(MOD_ARGS "${ARGV}")
+  unset(MOD_PREFIX)
   foreach(MOD_ARG ${MOD_ARGS})
     if(DEFINED MOD_ARG_NAME)
       # message(STATUS "MOD_${MOD_ARG_NAME}: ${MOD_ARG}")
@@ -38,14 +40,17 @@ macro(configure_mod)
       endif()
     endif()
   endforeach()
+  if(NOT DEFINED MOD_PREFIX)
+    set(MOD_PREFIX ${MOD_SLUG})
+  endif()
 
   set(MOD_SOURCE_DIR "${PROJECT_SOURCE_DIR}")
   set(MOD_TOOLS_DIR "${MOD_SOURCE_DIR}/tools")
   set(MOD_GAME_DIR "${MOD_SOURCE_DIR}/game_dir")
 
-  set(${MOD_SLUG}_GAME_DIR_FILES)
-  set(${MOD_SLUG}_GAME_DIR_FOLDERS)
-  set(${MOD_SLUG}_UNINSTALL_LOCATIONS)
+  set(${MOD_PREFIX}_GAME_DIR_FILES)
+  set(${MOD_PREFIX}_GAME_DIR_FOLDERS)
+  set(${MOD_PREFIX}_UNINSTALL_LOCATIONS)
 
   # load all the components
   file(GLOB CONFIGURE_COMPONENTS RELATIVE "${CYBERPUNK_CMAKE_MODULE_PATH}" "${CYBERPUNK_CMAKE_MODULE_PATH}/components/*.cmake" )

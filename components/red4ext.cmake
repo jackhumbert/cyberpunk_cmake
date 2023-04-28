@@ -25,7 +25,7 @@ macro(configure_red4ext)
     set(MOD_RED4EXT_SOURCE_DIR ${RED4EXT_DIR_RAW})
   endif()
 
-  list(APPEND ${MOD_SLUG}_UNINSTALL_LOCATIONS "${MOD_GAME_DIR}/red4ext/plugins")
+  list(APPEND ${MOD_PREFIX}_UNINSTALL_LOCATIONS "${MOD_GAME_DIR}/red4ext/plugins")
 
   # file(RELATIVE_PATH RED4EXT_RELATIVE "${MOD_SOURCE_DIR}" "${MOD_RED4EXT_SOURCE_DIR}")
   message(STATUS "Configuring red4ext files in ${MOD_RED4EXT_SOURCE_DIR}")
@@ -92,7 +92,7 @@ macro(configure_red4ext)
     # _WINDLL
     _CRT_SECURE_NO_WARNINGS
   )
-  
+
   target_compile_definitions(${MOD_SLUG}.dll PRIVATE
     MOD_VERSION_STR="${MOD_VERSION_STR}"
     MOD_VERSION_MAJOR=${MOD_VERSION_MAJOR}
@@ -149,8 +149,8 @@ macro(configure_red4ext)
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}.dll)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
 
-  list(APPEND ${MOD_SLUG}_GAME_DIR_FILES ${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG}/${MOD_SLUG}.dll)
-  list(APPEND ${MOD_SLUG}_GAME_DIR_FOLDERS ${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG})
+  list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG}/${MOD_SLUG}.dll)
+  list(APPEND ${MOD_PREFIX}_GAME_DIR_FOLDERS ${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG})
 endmacro()
 
 macro(configure_red4ext_addresses ZOLTAN_SIGNATURES ZOLTAN_ADDRESSES)

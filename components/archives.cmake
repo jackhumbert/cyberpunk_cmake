@@ -59,8 +59,8 @@ macro(configure_archives)
   add_custom_target(${MOD_SLUG}_archives
     DEPENDS ${MOD_GAME_DIR_ARCHIVES} ${MOD_GAME_DIR_ARCHIVE_XLS}
   )
-  list(APPEND ${MOD_SLUG}_GAME_DIR_FILES ${MOD_GAME_DIR_ARCHIVES})
-  list(APPEND ${MOD_SLUG}_GAME_DIR_FILES ${MOD_GAME_DIR_ARCHIVE_XLS})
+  list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR_ARCHIVES})
+  list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR_ARCHIVE_XLS})
   set_target_properties(${MOD_SLUG}_archives PROPERTIES FOLDER "Archives")
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}_archives)
 endmacro()
