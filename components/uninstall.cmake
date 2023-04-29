@@ -6,9 +6,9 @@ Must be called last, since this depends on the other components adding paths to
 `${MOD_PREFIX}_GAME_DIR_FILES`, `${MOD_PREFIX}_GAME_DIR_FOLDERS`, and `{${MOD_PREFIX}_UNINSTALL_LOCATIONS`
 ]]
 macro(configure_uninstall)
-    foreach(LOCATION ${${MOD_PREFIX}_UNINSTALL_LOCATIONS})
-        list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${LOCATION}/${MOD_UNINSTALL_FILENAME})
-    endforeach()
+    # foreach(LOCATION ${${MOD_PREFIX}_UNINSTALL_LOCATIONS})
+    #     list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${LOCATION}/${MOD_UNINSTALL_FILENAME})
+    # endforeach()
 
     message(STATUS "Configuring files to uninstall:")
     list(APPEND CMAKE_MESSAGE_INDENT "  ")
@@ -20,8 +20,17 @@ macro(configure_uninstall)
         list(APPEND MOD_INSTALLED_FILE_LIST ${GAME_DIR_FILE_NATIVE})
         message(STATUS "'${GAME_DIR_FILE}'")
     endforeach()
-    list(POP_BACK CMAKE_MESSAGE_INDENT)
     list(JOIN MOD_INSTALLED_FILE_LIST " " MOD_INSTALLED_FILES)
+    
+    set(MOD_UNINSTALL_SCRIPTS_LIST)
+    foreach(LOCATION ${${MOD_PREFIX}_UNINSTALL_LOCATIONS})
+        file(RELATIVE_PATH GAME_DIR_FILE ${MOD_GAME_DIR} ${LOCATION}/${MOD_UNINSTALL_FILENAME})
+        file(TO_NATIVE_PATH "${GAME_DIR_FILE}" GAME_DIR_FILE_NATIVE)
+        list(APPEND MOD_UNINSTALL_SCRIPTS_LIST ${GAME_DIR_FILE_NATIVE})
+        message(STATUS "'${GAME_DIR_FILE}'")
+    endforeach()
+    list(POP_BACK CMAKE_MESSAGE_INDENT)
+    list(JOIN MOD_UNINSTALL_SCRIPTS_LIST " " MOD_UNINSTALL_SCRIPTS)
 
     message(STATUS "Configuring folders to uninstall:")
     list(APPEND CMAKE_MESSAGE_INDENT "  ")
@@ -38,7 +47,8 @@ macro(configure_uninstall)
 
     # get the relative path for each uninstall location & generate the uninstall.bat there
     foreach(LOCATION ${${MOD_PREFIX}_UNINSTALL_LOCATIONS})
-        file(RELATIVE_PATH MOD_UNINSTALL_RELATIVE_PATH ${LOCATION} ${MOD_SOURCE_DIR})
+        file(RELATIVE_PATH UNINSTALL_RELATIVE_PATH ${LOCATION} ${MOD_GAME_DIR})
+        file(TO_NATIVE_PATH "${UNINSTALL_RELATIVE_PATH}" MOD_UNINSTALL_RELATIVE_PATH)
         configure_file(${MOD_UNINSTALL_BAT_IN} ${LOCATION}/${MOD_UNINSTALL_FILENAME})
     endforeach()
 endmacro()

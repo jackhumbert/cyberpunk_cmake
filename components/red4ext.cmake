@@ -3,6 +3,8 @@ set(MOD_VERSIONINFO_RC_FILE ${CYBERPUNK_CMAKE_FILES}/versioninfo.rc)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(MOD_GAME_DIR_RED4EXT_DIR ${MOD_GAME_DIR}/red4ext/plugins)
+
 #[[Configures a RED4ext plugin at the location passed:
 configure_redscript(src/red4ext)
 Uses these variables:
