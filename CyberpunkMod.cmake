@@ -11,8 +11,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 string(TIMESTAMP CURRENT_YEAR "%Y")
 
-list(APPEND CMAKE_CONFIGURATION_TYPES CI Debug Release)
-
 set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE PREFIX)
 
 #[[Configures the main `MOD_SLUG` target - can be passed a number of argument name/value pairs, which sets the MOD_<name> variable:

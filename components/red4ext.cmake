@@ -173,7 +173,7 @@ macro(configure_red4ext_addresses ZOLTAN_SIGNATURES ZOLTAN_ADDRESSES)
     message(STATUS "  Warning: signature file doesn't exist: ${MOD_ZOLTAN_SIGNATURES}")
   endif()
   message(STATUS "  Will create addresses file: ${MOD_ZOLTAN_ADDRESSES}")
-  if(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "CI")
+  if(NOT DEFINED CMAKE_CI_BUILD)
     add_custom_command(
       OUTPUT ${MOD_ZOLTAN_ADDRESSES}
       DEPENDS ${MOD_ZOLTAN_SIGNATURES}

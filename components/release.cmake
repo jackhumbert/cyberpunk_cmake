@@ -24,7 +24,7 @@ macro(configure_release ZIP_FILE)
       message(WARNING "GITHUB_ENV file does not exist: ${GITHUB_ENV}")
     endif()
   endif()
-  # if("${CMAKE_BUILD_TYPE}" STREQUAL "CI" AND ${PROJECT_IS_TOP_LEVEL})
+  # if(DEFINED CMAKE_CI_BUILD AND ${PROJECT_IS_TOP_LEVEL})
   #   add_custom_target(ci_release
   #     COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${MOD_ZIP_FILE}" --format=zip .
   #     WORKING_DIRECTORY ${MOD_GAME_DIR}
