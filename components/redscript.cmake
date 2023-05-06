@@ -103,12 +103,13 @@ macro(configure_redscript REDSCRIPT_DIR)
       OUTPUT ${REDSCRIPT_LAST_LINT}
       DEPENDS ${REDSCRIPT_PREREQ_FILE} ${REDSCRIPT_SOURCE_FILES}
       COMMAND ${REDSCRIPT_CLI_EXE} lint -s ${MOD_REDSCRIPT_DIR} -b ${REDSCRIPT_PREREQ_FILE} && echo "1" > ${REDSCRIPT_LAST_LINT}
-      COMMENT "Linting redscript against pre-compiled prereqs"
+      COMMENT "Linting redscript against pre-compiled prereqs at ${REDSCRIPT_PREREQ_FILE}"
       USES_TERMINAL)
 
     add_custom_target(${MOD_SLUG}_redscript_lint
       DEPENDS ${REDSCRIPT_PREREQ_FILE}
       COMMAND ${REDSCRIPT_CLI_EXE} lint -s ${MOD_REDSCRIPT_DIR} -b ${REDSCRIPT_PREREQ_FILE} && echo "1" > ${REDSCRIPT_LAST_LINT}
+      COMMENT "Linting redscript against pre-compiled prereqs at ${REDSCRIPT_PREREQ_FILE}"
       USES_TERMINAL)
     set_target_properties(${MOD_SLUG}_redscript_lint PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
   else()
