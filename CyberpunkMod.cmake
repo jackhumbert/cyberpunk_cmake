@@ -11,7 +11,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 string(TIMESTAMP CURRENT_YEAR "%Y")
 
-set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE PREFIX)
+set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE PREFIX COPYRIGHT)
 
 #[[Configures the main `MOD_SLUG` target - can be passed a number of argument name/value pairs, which sets the MOD_<name> variable:
 * NAME
@@ -22,6 +22,7 @@ set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE PRE
 * AUTHOR
 * VERSION
 * LICENSE
+* COPYRIGHT
 ]]
 macro(configure_mod)
   set(MOD_SLUG "${PROJECT_NAME}")
@@ -40,6 +41,10 @@ macro(configure_mod)
   endforeach()
   if(NOT DEFINED MOD_PREFIX)
     set(MOD_PREFIX ${MOD_SLUG})
+  endif()
+
+  if(NOT DEFINED MOD_COPYRIGHT)
+    set(MOD_COPYRIGHT "Copyright (c) 2023 ${MOD_AUTHOR}. All rights reserved.")
   endif()
 
   if(DEFINED MOD_SOURCE_DIR)
