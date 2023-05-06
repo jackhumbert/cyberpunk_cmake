@@ -1,10 +1,6 @@
 
 set(REDSCRIPT_MODULE_IN_FILENAME "Module.reds.in")
 
-set(REDSCRIPT_PREREQ_FILE "${PROJECT_BINARY_DIR}/dependencies.redscripts")
-set(REDSCRIPT_LAST_LINT "${PROJECT_BINARY_DIR}/redscript.lint")
-set(REDSCRIPT_PRECOMPILE_DIR "${PROJECT_BINARY_DIR}/redscript/precompile")
-
 set(REDSCRIPT_PACKED_FILENAME "packed.reds")
 set(REDSCRIPT_MODULE_FILENAME "module.reds")
 
@@ -32,6 +28,11 @@ macro(configure_redscript REDSCRIPT_DIR)
   else()
     set(MOD_REDSCRIPT_DIR ${REDSCRIPT_DIR_RAW})
   endif()
+  
+  set(REDSCRIPT_PREREQ_FILE "${MOD_BINARY_DIR}/dependencies.redscripts")
+  set(REDSCRIPT_LAST_LINT "${MOD_BINARY_DIR}/redscript.lint")
+  set(REDSCRIPT_PRECOMPILE_DIR "${MOD_BINARY_DIR}/redscript/precompile")
+
 
   set(MOD_GAME_DIR_REDSCRIPT_DIR "${MOD_GAME_DIR}/r6/scripts")
   set(MOD_GAME_DIR_REDSCRIPT_MOD_DIR "${MOD_GAME_DIR}/r6/scripts/${MOD_SLUG}")
@@ -70,7 +71,7 @@ macro(configure_redscript REDSCRIPT_DIR)
   endif()
 
   foreach(REDSCRIPT_DEPENDENCY_FILE ${REDSCRIPT_DEPENDENCIES_SOURCE_FILES})
-    file(RELATIVE_PATH REL_PATH ${PROJECT_SOURCE_DIR} ${REDSCRIPT_DEPENDENCY_FILE})
+    file(RELATIVE_PATH REL_PATH ${MOD_SOURCE_DIR} ${REDSCRIPT_DEPENDENCY_FILE})
     configure_file("${REDSCRIPT_DEPENDENCY_FILE}" "${REDSCRIPT_PRECOMPILE_DIR}/${REL_PATH}")
   endforeach()
 
