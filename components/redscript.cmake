@@ -135,6 +135,8 @@ macro(configure_redscript REDSCRIPT_DIR)
   set_target_properties(${MOD_SLUG}_redscript PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}_redscript)
 
+  find_package(Redscript)
+
   list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR_PACKED_FILE})
   if(NOT ${REDSCRIPT_PACK_INTO_RED4EXT})
     list(APPEND ${MOD_PREFIX}_GAME_DIR_FOLDERS ${MOD_GAME_DIR_REDSCRIPT_MOD_DIR})

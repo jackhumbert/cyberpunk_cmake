@@ -26,9 +26,11 @@ macro(configure_tweaks TWEAKS_SOURCE_DIR)
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
   foreach(FILE ${MOD_TWEAKS_SOURCE_FILES})
     file(RELATIVE_PATH TWEAKS_RELATIVE "${MOD_TWEAKS_SOURCE_DIR}" "${FILE}")
-    message(STATUS "Found ${TWEAKS_RELATIVE}")
+    message(STATUS "'${TWEAKS_RELATIVE}'")
   endforeach()
   list(POP_BACK CMAKE_MESSAGE_INDENT)
+
+  find_package(TweakXL)
 
   add_custom_command(
     OUTPUT ${MOD_GAME_DIR_TWEAKS_PACKED_FILE}

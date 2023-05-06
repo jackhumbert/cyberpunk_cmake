@@ -13,8 +13,8 @@ Sets these variables:
 macro(configure_archives)
   process_arg("${ARGV}" ARCHIVE_FILES ${MOD_SOURCE_DIR})
 
-  set(MOD_GAME_DIR_ARCHIVES)
-  set(MOD_GAME_DIR_ARCHIVE_XLS)
+  unset(MOD_GAME_DIR_ARCHIVES)
+  unset(MOD_GAME_DIR_ARCHIVE_XLS)
   message(STATUS "Configuring archives")
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
@@ -55,6 +55,10 @@ macro(configure_archives)
   endforeach()
 
   list(POP_BACK CMAKE_MESSAGE_INDENT)
+
+  if(DEFINED MOD_GAME_DIR_ARCHIVE_XLS)
+    find_package(ArchiveXL)
+  endif()
 
   add_custom_target(${MOD_SLUG}_archives
     DEPENDS ${MOD_GAME_DIR_ARCHIVES} ${MOD_GAME_DIR_ARCHIVE_XLS}

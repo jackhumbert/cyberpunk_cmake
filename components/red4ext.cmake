@@ -60,6 +60,7 @@ macro(configure_red4ext)
   endforeach()
   list(POP_BACK CMAKE_MESSAGE_INDENT)
 
+  find_package(RED4ext)
   find_package(RED4ext.SDK)
   print_rel_dir("RED4ext.SDK:" ${MOD_RED4EXT_SDK_DIR})
   
