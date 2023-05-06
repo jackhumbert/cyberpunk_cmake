@@ -1,6 +1,7 @@
 macro(configure_mod_file IN_FILE OUT_FILE)
     set(MOD_IN_FILE "${IN_FILE}")
     set(MOD_OUT_FILE "${OUT_FILE}")
+    message(STATUS "Configuring '${MOD_OUT_FILE}'")
     cmake_path(IS_RELATIVE MOD_IN_FILE IS_IN_RELATIVE)
     if(IS_IN_RELATIVE)
         set(MOD_IN_FILE ${MOD_SOURCE_DIR}/${MOD_IN_FILE})
