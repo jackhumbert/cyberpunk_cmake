@@ -1,5 +1,3 @@
-set(MOD_GAME_DIR_TWEAKS_PACKED_FILE "${MOD_GAME_DIR}/r6/tweaks/${MOD_SLUG}.yaml")
-
 #[[Configures the tweaks to be packed into `MOD_GAME_DIR_TWEAKS_PACKED_FILE` with the directory passed:
 configure_tweaks(src/tweaks)
 Uses these variables:
@@ -17,6 +15,8 @@ macro(configure_tweaks TWEAKS_SOURCE_DIR)
     set(MOD_TWEAKS_SOURCE_DIR ${TWEAKS_DIR_RAW})
   endif()
 
+  set(MOD_GAME_DIR_TWEAKS_PACKED_FILE "${MOD_GAME_DIR}/r6/tweaks/${MOD_SLUG}.yaml")
+
   # file(RELATIVE_PATH TWEAKS_DIR_RELATIVE "${MOD_SOURCE_DIR}" "${MOD_TWEAKS_SOURCE_DIR}")
   message(STATUS "Configuring tweaks files in ${MOD_TWEAKS_SOURCE_DIR}")
 
@@ -30,6 +30,7 @@ macro(configure_tweaks TWEAKS_SOURCE_DIR)
   endforeach()
   list(POP_BACK CMAKE_MESSAGE_INDENT)
 
+  include(Header)
   find_package(TweakXL)
 
   add_custom_command(
@@ -41,5 +42,7 @@ macro(configure_tweaks TWEAKS_SOURCE_DIR)
 
   add_custom_target(${MOD_SLUG}_tweaks
     DEPENDS ${MOD_GAME_DIR_TWEAKS_PACKED_FILE}
-  )
+  ) 
+  add_dependencies(${MOD_SLUG} ${MOD_SLUG}_tweaks)
+
 endmacro()
