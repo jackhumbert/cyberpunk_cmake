@@ -93,7 +93,7 @@ macro(configure_redscript REDSCRIPT_DIR)
     set(REDSCRIPT_DEPENDENCIES_SOURCE_FILES ${REDSCRIPT_DEPENDENCIES_SOURCE_FILES} CACHE INTERNAL "Files used in compiling redscript dependencies")
   endif()
 
-  if(NOT DEFINED CMAKE_CI_BUILD)
+  if(NOT ${CMAKE_CI_BUILD})
     add_custom_command(
       OUTPUT ${REDSCRIPT_LAST_LINT}
       DEPENDS ${REDSCRIPT_PREREQ_FILE} ${REDSCRIPT_SOURCE_FILES}
