@@ -42,10 +42,20 @@ macro(configure_mod)
     set(MOD_PREFIX ${MOD_SLUG})
   endif()
 
+  if(DEFINED MOD_SOURCE_DIR)
+    set(PARENT_MOD_SOURCE_DIR ${MOD_SOURCE_DIR})
+  else()
+  endif()
+
   set(MOD_SOURCE_DIR "${PROJECT_SOURCE_DIR}")
   set(MOD_TOOLS_DIR "${MOD_SOURCE_DIR}/tools")
-  set(MOD_GAME_DIR "${MOD_SOURCE_DIR}/game_dir")
 
+  if(DEFINED PARENT_MOD_SOURCE_DIR)
+    set(MOD_GAME_DIR "${PARENT_MOD_SOURCE_DIR}/game_dir_prereqs")
+  else()
+    set(MOD_GAME_DIR "${MOD_SOURCE_DIR}/game_dir")
+  endif()
+  
   set(${MOD_PREFIX}_GAME_DIR_FILES)
   set(${MOD_PREFIX}_GAME_DIR_FOLDERS)
   set(${MOD_PREFIX}_UNINSTALL_LOCATIONS)
