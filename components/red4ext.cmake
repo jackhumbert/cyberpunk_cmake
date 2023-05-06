@@ -3,8 +3,6 @@ set(MOD_VERSIONINFO_RC_FILE ${CYBERPUNK_CMAKE_FILES}/versioninfo.rc)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(MOD_GAME_DIR_RED4EXT_DIR ${MOD_GAME_DIR}/red4ext/plugins)
-
 #[[Configures a RED4ext plugin at the location passed:
 configure_redscript(src/red4ext)
 Uses these variables:
@@ -27,42 +25,43 @@ macro(configure_red4ext)
     set(MOD_RED4EXT_SOURCE_DIR ${RED4EXT_DIR_RAW})
   endif()
 
+  set(MOD_GAME_DIR_RED4EXT_DIR ${MOD_GAME_DIR}/red4ext/plugins)
+  set(MOD_GAME_DIR_RED4EXT_MOD_DIR ${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG})
   list(APPEND ${MOD_PREFIX}_UNINSTALL_LOCATIONS "${MOD_GAME_DIR}/red4ext/plugins")
 
-  # file(RELATIVE_PATH RED4EXT_RELATIVE "${MOD_SOURCE_DIR}" "${MOD_RED4EXT_SOURCE_DIR}")
-  message(STATUS "Configuring red4ext files in ${MOD_RED4EXT_SOURCE_DIR}")
+  print_rel_dir("Configuring red4ext files in" ${MOD_RED4EXT_SOURCE_DIR})
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
   
   file(GLOB_RECURSE HEADER_FILES ${MOD_RED4EXT_SOURCE_DIR}/*.hpp)
   file(GLOB_RECURSE SOURCE_FILES ${MOD_RED4EXT_SOURCE_DIR}/*.cpp)
   file(GLOB_RECURSE RC_FILES ${MOD_RED4EXT_SOURCE_DIR}/*.rc)
 
-  message(STATUS "Configuring header files")
+  message(STATUS "Configuring header files:")
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
   foreach(FILE ${HEADER_FILES})
     file(RELATIVE_PATH FILE_RELATIVE "${MOD_RED4EXT_SOURCE_DIR}" "${FILE}")
-    message(STATUS "Found ${FILE_RELATIVE}")
+    message(STATUS "'${FILE_RELATIVE}'")
   endforeach()
   list(POP_BACK CMAKE_MESSAGE_INDENT)
 
-  message(STATUS "Configuring source files")
+  message(STATUS "Configuring source files:")
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
   foreach(FILE ${SOURCE_FILES})
     file(RELATIVE_PATH FILE_RELATIVE "${MOD_RED4EXT_SOURCE_DIR}" "${FILE}")
-    message(STATUS "Found ${FILE_RELATIVE}")
+    message(STATUS "'${FILE_RELATIVE}'")
   endforeach()
   list(POP_BACK CMAKE_MESSAGE_INDENT)
 
-  message(STATUS "Configuring rc files")
+  message(STATUS "Configuring rc files:")
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
   foreach(FILE ${RC_FILES})
     file(RELATIVE_PATH FILE_RELATIVE "${MOD_RED4EXT_SOURCE_DIR}" "${FILE}")
-    message(STATUS "Found ${FILE_RELATIVE}")
+    message(STATUS "'${FILE_RELATIVE}'")
   endforeach()
   list(POP_BACK CMAKE_MESSAGE_INDENT)
 
   find_package(RED4ext.SDK)
-  message(STATUS "Found RED4ext.SDK: ${MOD_RED4EXT_SDK_DIR}")
+  print_rel_dir("RED4ext.SDK:" ${MOD_RED4EXT_SDK_DIR})
   
   list(APPEND CMAKE_MODULE_PATH "${MOD_RED4EXT_SDK_DIR}/cmake")
   include(GetGameVersion)
@@ -146,13 +145,13 @@ macro(configure_red4ext)
     DEPENDS ${MOD_SLUG}.dll
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:${MOD_SLUG}.dll>
-    ${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG}/${MOD_SLUG}.dll
-    COMMENT "${MOD_SLUG}.dll -> ${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG}/${MOD_SLUG}.dll")
+    ${MOD_GAME_DIR_RED4EXT_MOD_DIR}/${MOD_SLUG}.dll
+    COMMENT "${MOD_SLUG}.dll -> ${MOD_GAME_DIR_RED4EXT_MOD_DIR}/${MOD_SLUG}.dll")
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}.dll)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
 
-  list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG}/${MOD_SLUG}.dll)
-  list(APPEND ${MOD_PREFIX}_GAME_DIR_FOLDERS ${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG})
+  list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR_RED4EXT_MOD_DIR}/${MOD_SLUG}.dll)
+  list(APPEND ${MOD_PREFIX}_GAME_DIR_FOLDERS ${MOD_GAME_DIR_RED4EXT_MOD_DIR})
 endmacro()
 
 macro(configure_red4ext_addresses ZOLTAN_SIGNATURES ZOLTAN_ADDRESSES)
@@ -168,11 +167,11 @@ macro(configure_red4ext_addresses ZOLTAN_SIGNATURES ZOLTAN_ADDRESSES)
     set(MOD_ZOLTAN_ADDRESSES ${MOD_RED4EXT_SOURCE_DIR}/${MOD_ZOLTAN_ADDRESSES})
   endif()
   if(EXISTS ${MOD_ZOLTAN_SIGNATURES})
-    message(STATUS "  Found signature file: ${MOD_ZOLTAN_SIGNATURES}")
+    message(STATUS "  Signature file: ${MOD_ZOLTAN_SIGNATURES}")
   else()
     message(STATUS "  Warning: signature file doesn't exist: ${MOD_ZOLTAN_SIGNATURES}")
   endif()
-  message(STATUS "  Will create addresses file: ${MOD_ZOLTAN_ADDRESSES}")
+  message(STATUS "  Addresses file: ${MOD_ZOLTAN_ADDRESSES}")
   if(NOT DEFINED CMAKE_CI_BUILD)
     add_custom_command(
       OUTPUT ${MOD_ZOLTAN_ADDRESSES}

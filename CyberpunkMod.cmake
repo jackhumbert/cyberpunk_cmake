@@ -44,7 +44,9 @@ macro(configure_mod)
 
   if(DEFINED MOD_SOURCE_DIR)
     set(PARENT_MOD_SOURCE_DIR ${MOD_SOURCE_DIR})
+    set(TOP_MOD_SOURCE_DIR ${MOD_SOURCE_DIR})
   else()
+    set(TOP_MOD_SOURCE_DIR ${PROJECT_SOURCE_DIR})
   endif()
 
   set(MOD_SOURCE_DIR "${PROJECT_SOURCE_DIR}")
@@ -76,14 +78,19 @@ macro(configure_mod)
   if(PROJECT_IS_TOP_LEVEL)
     set(FOLDER_PREFIX)
     # set(MOD_TARGET_PREFIX)
-    add_custom_target(${MOD_SLUG} ALL)
   else()
     set(FOLDER_PREFIX "${MOD_NAME}/")
     # set(MOD_TARGET_PREFIX "${MOD_SLUG}_")
-    add_custom_target(${MOD_SLUG})
   endif()
 
+  add_custom_target(${MOD_SLUG} ALL)
+
   set_target_properties(${MOD_SLUG} PROPERTIES FOLDER "${FOLDER_PREFIX}")
+endmacro()
+
+macro(print_rel_dir MESSAGE LOCATION)
+  file(RELATIVE_PATH RELATIVE_LOCATION "${TOP_MOD_SOURCE_DIR}" "${LOCATION}")
+  message(STATUS "${MESSAGE} '${RELATIVE_LOCATION}'")
 endmacro()
 
 function(process_arg LIST_IN LIST_OUT_STR RELATIVE_PATH)
