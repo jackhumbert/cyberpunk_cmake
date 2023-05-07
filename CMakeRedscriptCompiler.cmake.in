@@ -1,0 +1,19 @@
+# This file is used to store compiler information and is copied down into try
+# compile directories so that try compiles do not need to re-determine and test the LANG
+
+set(CMAKE_Redscript_COMPILER "@CMAKE_Redscript_COMPILER@")
+set(CMAKE_Redscript_COMPILER_ID "@CMAKE_Redscript_COMPILER_ID@")
+set(CMAKE_Redscript_COMPILER_VERSION "@CMAKE_Redscript_COMPILER_VERSION@")
+
+set(CMAKE_Redscript_COMPILER_LOADED 1)
+set(CMAKE_Redscript_COMPILER_WORKS "@CMAKE_Redscript_COMPILER_WORKS@")
+
+set(CMAKE_Redscript_COMPILER_ID_RUN "@CMAKE_Redscript_COMPILER_ID_RUN@")
+# set(CMAKE_Redscript_IGNORE_EXTENSIONS "reds;script;ws;REDS;SCRIPT;WS")
+set(CMAKE_Redscript_SOURCE_FILE_EXTENSIONS "reds;REDS")
+
+set(CMAKE_Redscript_COMPILE_OBJECT "\"${CMAKE_COMMAND}\" -E copy <SOURCE> <OBJECT>")
+
+set(CMAKE_EXECUTABLE_SUFFIX ".redscripts")
+
+set(CMAKE_Redscript_OUTPUT_EXTENSION .redscripts)
