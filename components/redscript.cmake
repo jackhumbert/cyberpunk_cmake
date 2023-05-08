@@ -82,16 +82,22 @@ macro(configure_redscript REDSCRIPT_DIR)
     ARGS compile -s "${${MOD_PREFIX}_REDSCRIPT_PRECOMPILE_DIR}" -b "${CYBERPUNK_2077_REDSCRIPT_BACKUP}" -o "${${MOD_PREFIX}_REDSCRIPT_PREREQ_FILE}"
     COMMENT "Precompiling redscript dependencies at ${${MOD_PREFIX}_REDSCRIPT_PRECOMPILE_DIR}")
 
-  file(GLOB_RECURSE REDSCRIPT_SOURCE_FILES ${MOD_REDSCRIPT_DIR}/*.reds LIST_DIRECTORIES false)
+  file(GLOB_RECURSE REDSCRIPT_SOURCE_FILES CONFIGURE_DEPENDS ${MOD_REDSCRIPT_DIR}/*.reds LIST_DIRECTORIES false)
 
-  add_executable(${MOD_PREFIX}_redscriptBlob)
-  target_sources(${MOD_PREFIX}_redscriptBlob PRIVATE ${REDSCRIPT_SOURCE_FILES})
-
+  enable_language(REDSCRIPT)
+  add_library(${MOD_SLUG}.redscripts ${REDSCRIPT_SOURCE_FILES})
+  set_target_properties(${MOD_SLUG}.redscripts PROPERTIES OUTPUT_NAME ${MOD_SLUG})
+  # set_target_properties(${MOD_SLUG}.redscripts PROPERTIES LANGUAGE Redscript)
+  source_group("Source Files" FILES ${REDSCRIPT_SOURCE_FILES})
+  target_include_directories(${MOD_SLUG}.redscripts PUBLIC ${MOD_REDSCRIPT_DIR})
+  add_dependencies(${MOD_SLUG} ${MOD_SLUG}.redscripts)
 
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
   foreach(FILE ${REDSCRIPT_SOURCE_FILES})
     file(RELATIVE_PATH RELATIVE_PATH "${MOD_REDSCRIPT_DIR}" "${FILE}")
+    file(RELATIVE_PATH RELATIVE_SOURCE_PATH "${MOD_SOURCE_DIR}" "${FILE}")
+    # target_sources(${MOD_SLUG}.redscripts PUBLIC ${RELATIVE_SOURCE_PATH})
     message(STATUS "'${RELATIVE_PATH}'")
   endforeach()
 
@@ -128,7 +134,7 @@ macro(configure_redscript REDSCRIPT_DIR)
 
   add_custom_command(
     OUTPUT ${MOD_GAME_DIR_PACKED_FILE}
-    BYPRODUCTS ${MOD_GAME_DIR_PACKED_FILE}
+    # BYPRODUCTS ${MOD_GAME_DIR_PACKED_FILE}
     DEPENDS ${MOD_SLUG}_redscript_lint ${REDSCRIPT_SOURCE_FILES}
     COMMAND ${CMAKE_COMMAND} -D COMMENT_SLUG="//" -D GLOB_EXT="reds" -D HEADER_FILE="${MOD_HEADER_TXT_FILE}" -D PACKED_FILE=${MOD_GAME_DIR_PACKED_FILE} -D SEARCH_FOLDER=${MOD_REDSCRIPT_DIR} -P ${CYBERPUNK_CMAKE_SCRIPTS}/PackFiles.cmake
     COMMENT "Packing redscript files into one")

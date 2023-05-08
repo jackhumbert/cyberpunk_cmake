@@ -67,6 +67,8 @@ macro(configure_red4ext)
   list(APPEND CMAKE_MODULE_PATH "${MOD_RED4EXT_SDK_DIR}/cmake")
   include(GetGameVersion)
 
+  enable_language(CXX)
+  enable_language(RC)
   add_library(${MOD_SLUG}.dll SHARED)
 
   set_target_properties(${MOD_SLUG}.dll PROPERTIES FOLDER Red4ext)

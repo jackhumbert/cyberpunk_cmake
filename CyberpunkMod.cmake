@@ -11,7 +11,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 string(TIMESTAMP CURRENT_YEAR "%Y")
 
-set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE PREFIX COPYRIGHT)
 
 #[[Configures the main `MOD_SLUG` target - can be passed a number of argument name/value pairs, which sets the MOD_<name> variable:
 * NAME
@@ -25,20 +24,16 @@ set(CONFIGURE_MOD_ARG_NAMES NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE PRE
 * COPYRIGHT
 ]]
 macro(configure_mod)
-  set(MOD_SLUG "${PROJECT_NAME}")
-  set(MOD_ARGS "${ARGV}")
   unset(MOD_PREFIX)
-  foreach(MOD_ARG ${MOD_ARGS})
-    if(DEFINED MOD_ARG_NAME)
-      # message(STATUS "MOD_${MOD_ARG_NAME}: ${MOD_ARG}")
-      set(MOD_${MOD_ARG_NAME} ${MOD_ARG})
-      unset(MOD_ARG_NAME)
-    else()
-      if(${MOD_ARG} IN_LIST CONFIGURE_MOD_ARG_NAMES)
-        set(MOD_ARG_NAME ${MOD_ARG})
-      endif()
-    endif()
-  endforeach()
+  set(CONFIGURE_MOD_OPTIONS NONE)
+  set(CONFIGURE_MOD_ONE_VALUE NAME SLUG DESCRIPTION URL AUTHOR VERSION LICENSE PREFIX COPYRIGHT)
+  set(CONFIGURE_MOD_MULTI_VALUE NONE2)
+  cmake_parse_arguments(MOD "${CONFIGURE_MOD_OPTIONS}" "${CONFIGURE_MOD_ONE_VALUE}" "${CONFIGURE_MOD_MULTI_VALUE}" ${ARGN})
+
+  if(NOT DEFINED MOD_SLUG)
+    set(MOD_SLUG "${PROJECT_NAME}")
+  endif()
+
   if(NOT DEFINED MOD_PREFIX)
     set(MOD_PREFIX ${MOD_SLUG})
   endif()

@@ -1,36 +1,17 @@
 # this should find the compiler for LANG and configure CMake(LANG)Compiler.cmake.in
 
-include(${CMAKE_ROOT}/Modules/CMakeDetermineCompiler.cmake)
-#include(Platform/${CMAKE_SYSTEM_NAME}-Determine-Redscript OPTIONAL)
-#include(Platform/${CMAKE_SYSTEM_NAME}-Redscript OPTIONAL)
-if(NOT CMAKE_Redscript_COMPILER_NAMES)
-  set(CMAKE_Redscript_COMPILER_NAMES redscript-cli.exe)
-endif()
+find_program(CMAKE_REDSCRIPT_COMPILER
+  NAMES "redscript-cli.exe"
+  PATHS ${CMAKE_SOURCE_DIR}/tools
+)
 
-# Build a small source file to identify the compiler.
-if(NOT CMAKE_Redscript_COMPILER_ID_RUN)
-  set(CMAKE_Redscript_COMPILER_ID_RUN 1)
+mark_as_advanced(CMAKE_REDSCRIPT_COMPILER)
 
-  # Try to identify the compiler.
-  set(CMAKE_Redscript_COMPILER_ID)
-  include(${CMAKE_ROOT}/Modules/CMakeDetermineCompilerId.cmake)
-  CMAKE_DETERMINE_COMPILER_ID(Redscript RSFLAGS CMakeRedscriptCompilerId.reds)
-
-  execute_process(COMMAND "${CMAKE_Redscript_COMPILER}" "--version" OUTPUT_VARIABLE output)
-  string(REPLACE "\n" ";" output "${output}")
-  foreach(line ${output})
-    string(TOUPPER ${line} line)
-    string(REGEX REPLACE "^.*COMPILER.*VERSION[^\\.0-9]*([\\.0-9]+).*$" "\\1" version "${line}")
-    if(version AND NOT "x${line}" STREQUAL "x${version}")
-      set(CMAKE_Redscript_COMPILER_VERSION ${version})
-      break()
-    endif()
-  endforeach()
-  message(STATUS "The Redscript compiler version is ${CMAKE_Redscript_COMPILER_VERSION}")
-endif()
+# set(ENV{CMAKE_REDSCRIPT_COMPILER_LAUNCHER} powershell.exe)
+set(CMAKE_REDSCRIPT_SOURCE_FILE_EXTENSIONS reds)
+set(CMAKE_REDSCRIPT_OUTPUT_EXTENSION .redscripts)
+set(CMAKE_REDSCRIPT_COMPILER_ENV_VAR "REDSCRIPT")
 
 # configure variables set in this file for fast reload later on
-configure_file(deps/cyberpunk_cmake/CMakeRedscriptCompiler.cmake.in
-  ${CMAKE_PLATFORM_INFO_DIR}/CMakeRedscriptCompiler.cmake
-  @ONLY
-  )
+configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeRedscriptCompiler.cmake.in
+${CMAKE_PLATFORM_INFO_DIR}/CMakeRedscriptCompiler.cmake @ONLY)

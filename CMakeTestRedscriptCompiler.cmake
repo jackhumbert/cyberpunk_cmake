@@ -1,2 +1,3 @@
 # test the compiler and set:
 set(CMAKE_Redscript_COMPILER_WORKS 1 CACHE INTERNAL "")
+set(CMAKE_REDSCRIPT_COMPILER_WORKS 1 CACHE INTERNAL "")
