@@ -11,6 +11,8 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 string(TIMESTAMP CURRENT_YEAR "%Y")
 
+configure_file(${CYBERPUNK_CMAKE_FILES}/build.yaml ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/build.yaml COPYONLY)
+configure_file(${CYBERPUNK_CMAKE_FILES}/release.yaml ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/release.yaml COPYONLY)
 
 #[[Configures the main `MOD_SLUG` target - can be passed a number of argument name/value pairs, which sets the MOD_<name> variable:
 * NAME
