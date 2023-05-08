@@ -49,19 +49,7 @@ cmake_initialize_per_config_variable(CMAKE_REDSCRIPT_LINK_FLAGS "Flags used by R
 
 include(CMakeCommonLanguageInclude)
 
-set(LANGUAGE_COMPILE_FLAGS "TEST")
-
 # if(CMAKE_GENERATOR STREQUAL "Visual Studio")
-
-# if(NOT DEFINED CMAKE_REDSCRIPT_ARCHIVE_CREATE)
-#   set(CMAKE_REDSCRIPT_ARCHIVE_CREATE "touch <TARGET>")
-# endif()
-# if(NOT DEFINED CMAKE_REDSCRIPT_ARCHIVE_APPEND)
-#   set(CMAKE_REDSCRIPT_ARCHIVE_APPEND "touch <TARGET>")
-# endif()
-# if(NOT DEFINED CMAKE_REDSCRIPT_ARCHIVE_FINISH)
-#   set(CMAKE_REDSCRIPT_ARCHIVE_FINISH "touch <TARGET>")
-# endif()
 
 if(NOT CMAKE_REDSCRIPT_COMPILE_OBJECT)
     set(CMAKE_REDSCRIPT_COMPILE_OBJECT 
@@ -70,48 +58,20 @@ if(NOT CMAKE_REDSCRIPT_COMPILE_OBJECT)
         # "true"
     )
 endif()
-# set(CMAKE_REDSCRIPT_COMPILE_OBJECT "<CMAKE_REDSCRIPT_COMPILER> compile -s <OBJECT_DIR> <CMAKE_REDSCRIPT_FLAGS> -o <TARGET>")
-# if(NOT CMAKE_REDSCRIPT_LINK_EXECUTABLE)
-#     set(CMAKE_REDSCRIPT_LINK_EXECUTABLE 
-#         "<CMAKE_REDSCRIPT_COMPILER> compile -s <OBJECT_DIR> <CMAKE_REDSCRIPT_FLAGS> -b \"${CYBERPUNK_2077_REDSCRIPT_BACKUP}\" -o <TARGET> "
-#     )
-# endif()
-# if(NOT CMAKE_Swift_CREATE_SHARED_LIBRARY)
-#     set(CMAKE_Swift_CREATE_SHARED_LIBRARY 
-#         "<CMAKE_REDSCRIPT_COMPILER> compile <INCLUDES> -b \"${CYBERPUNK_2077_REDSCRIPT_BACKUP}\" -o <TARGET>"
-#         # "<CMAKE_COMMAND> -E copy_if_different <TARGET> <TARGET_IMPLIB>"
-#     )
-# endif()
-# if(NOT CMAKE_REDSCRIPT_CREATE_SHARED_MODULE)
-#     set(CMAKE_REDSCRIPT_CREATE_SHARED_MODULE ${CMAKE_REDSCRIPT_CREATE_SHARED_LIBRARY})
-# endif()
+
 if(NOT CMAKE_Swift_CREATE_STATIC_LIBRARY)
-# set(CMAKE_REDSCRIPT_CREATE_STATIC_LIBRARY
-#     # "<CMAKE_REDSCRIPT_COMPILER> lint -s <OBJECT_DIR> <LANGUAGE_COMPILE_FLAGS> -b \"${CYBERPUNK_2077_REDSCRIPT_BACKUP}\""
-#     "<CMAKE_COMMAND> -D COMMENT_SLUG=\"//\" -D GLOB_EXT=\"reds\" -D HEADER_FILE=\"${MOD_HEADER_TXT_FILE}\" -D PACKED_FILE=<TARGET> -D SEARCH_FOLDER=${MOD_REDSCRIPT_DIR} -P ${CYBERPUNK_CMAKE_SCRIPTS}/PackFiles.cmake"
-# )
     set(CMAKE_Swift_CREATE_STATIC_LIBRARY
         "<CMAKE_REDSCRIPT_COMPILER> lint <INCLUDES> -b \"${CYBERPUNK_2077_REDSCRIPT_BACKUP}\""
         "<CMAKE_COMMAND> -D COMMENT_SLUG=\"//\" -D GLOB_EXT=\"reds\" -D HEADER_FILE=\"${MOD_HEADER_TXT_FILE}\" -D PACKED_FILE=<TARGET> -D SEARCH_FOLDER=${MOD_REDSCRIPT_DIR} -P ${CYBERPUNK_CMAKE_SCRIPTS}/PackFiles.cmake"
         "<CMAKE_COMMAND> -E copy_if_different <TARGET> ${MOD_GAME_DIR_PACKED_FILE}"
     )
 endif()
+
 if(NOT CMAKE_Swift_CREATE_SHARED_MODULE)
     set(CMAKE_Swift_CREATE_SHARED_MODULE
-        "<CMAKE_REDSCRIPT_COMPILER> lint <INCLUDES> -b \"${CYBERPUNK_2077_REDSCRIPT_BACKUP}\""
+        "<CMAKE_REDSCRIPT_COMPILER> lint -s <SWIFT_SOURCES> <INCLUDES> -b \"${CYBERPUNK_2077_REDSCRIPT_BACKUP}\""
         "<CMAKE_COMMAND> -E copy_if_different <SWIFT_SOURCES> ${MOD_GAME_DIR_MODULE_FILE}"
     )
 endif()
 
 set(CMAKE_REDSCRIPT_INFORMATION_LOADED 1)
-
-macro(add_redscript_dependency DEPENDENCY)
-    # target_link_libraries(${MOD_SLUG}.redscripts PUBLIC "-s $<JOIN:$<TARGET_OBJECTS:${DEPENDENCY}.redscripts>, -s >")
-    # add_dependencies(${MOD_SLUG}.redscripts ${DEPENDENCY}.redscripts)
-    # target_link_libraries(${MOD_SLUG}.redscripts PUBLIC ${DEPENDENCY}.redscripts)
-    # target_compile_options(${MOD_SLUG}.packed.reds PUBLIC test $<TARGET_OBJECTS:${DEPENDENCY}.packed.reds>)
-    # target_link_options(${MOD_SLUG}.packed.reds PUBLIC test)
-    target_link_libraries(${MOD_SLUG}.packed.reds PUBLIC ${DEPENDENCY}.packed.reds)
-    # target_include_directories(${MOD_SLUG}.packed.reds PUBLIC ${DEPENDENCY}.packed.reds)
-    # add_dependencies(${MOD_SLUG}.packed.reds ${DEPENDENCY}.packed.reds)
-endmacro()

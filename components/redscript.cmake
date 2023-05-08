@@ -59,118 +59,49 @@ macro(configure_redscript REDSCRIPT_DIR)
 
   set(REDSCRIPT_MODULE_IN_FILE "${MOD_REDSCRIPT_DIR}/${REDSCRIPT_MODULE_IN_FILENAME}")
 
-  if(EXISTS "${REDSCRIPT_MODULE_IN_FILE}")
-    configure_file("${REDSCRIPT_MODULE_IN_FILE}" "${MOD_GAME_DIR_MODULE_FILE}" @ONLY)
-    add_custom_target(${MOD_SLUG}_redscript_module
-      DEPENDS ${MOD_GAME_DIR_MODULE_FILE}
-      SOURCES ${REDSCRIPT_MODULE_IN_FILE})
-    set_target_properties(${MOD_SLUG}_redscript_module PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
-    add_dependencies(${MOD_SLUG} ${MOD_SLUG}_redscript_module)
-
-    list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR_MODULE_FILE})
-  endif()
-
-  foreach(REDSCRIPT_DEPENDENCY_FILE ${${MOD_PREFIX}_REDSCRIPT_DEPENDENCIES_SOURCE_FILES})
-    file(RELATIVE_PATH REL_PATH ${MOD_SOURCE_DIR} ${REDSCRIPT_DEPENDENCY_FILE})
-    configure_file("${REDSCRIPT_DEPENDENCY_FILE}" "${${MOD_PREFIX}_REDSCRIPT_PRECOMPILE_DIR}/${REL_PATH}")
-  endforeach()
-
-  add_custom_command(
-    OUTPUT ${${MOD_PREFIX}_REDSCRIPT_PREREQ_FILE}
-    DEPENDS ${${MOD_PREFIX}_REDSCRIPT_DEPENDENCIES_SOURCE_FILES}
-    COMMAND ${REDSCRIPT_CLI_EXE}
-    ARGS compile -s "${${MOD_PREFIX}_REDSCRIPT_PRECOMPILE_DIR}" -b "${CYBERPUNK_2077_REDSCRIPT_BACKUP}" -o "${${MOD_PREFIX}_REDSCRIPT_PREREQ_FILE}"
-    COMMENT "Precompiling redscript dependencies at ${${MOD_PREFIX}_REDSCRIPT_PRECOMPILE_DIR}")
-
   file(GLOB_RECURSE REDSCRIPT_SOURCE_FILES CONFIGURE_DEPENDS ${MOD_REDSCRIPT_DIR}/*.reds LIST_DIRECTORIES false)
-
-  enable_language(REDSCRIPT)
-  add_library(${MOD_SLUG}.packed.reds STATIC ${REDSCRIPT_SOURCE_FILES})
-  set_target_properties(${MOD_SLUG}.packed.reds PROPERTIES 
-    OUTPUT_NAME ${MOD_SLUG}.packed
-    LINKER_LANGUAGE Swift
-    # IMPORT_SUFFIX .packed.reds
-    SUFFIX .reds
-  )
-  target_include_directories(${MOD_SLUG}.packed.reds PUBLIC ${MOD_REDSCRIPT_DIR})
-  # add_library(${MOD_SLUG}.redscripts SHARED ${REDSCRIPT_SOURCE_FILES})
-  # set_target_properties(${MOD_SLUG}.redscripts PROPERTIES 
-  #   OUTPUT_NAME ${MOD_SLUG}
-  #   LINKER_LANGUAGE Swift
-  #   SUFFIX .redscript
-  #   IMPORT_SUFFIX .redscripts.bk
-  # )
-  # set_target_properties(${MOD_SLUG}.redscripts PROPERTIES LANGUAGE Redscript)
-  source_group("Source Files" FILES ${REDSCRIPT_SOURCE_FILES})
-  # target_include_directories(${MOD_SLUG}.redscripts PUBLIC ${MOD_REDSCRIPT_DIR})
-  # target_link_options(${MOD_SLUG}.redscripts PRIVATE $<>)
-  add_dependencies(${MOD_SLUG} ${MOD_SLUG}.packed.reds)
-
-  configure_file(${REDSCRIPT_MODULE_IN_FILE} ${MOD_SLUG}.${REDSCRIPT_MODULE_FILENAME})
-  add_library(${MOD_SLUG}.module.reds MODULE ${MOD_SLUG}.${REDSCRIPT_MODULE_FILENAME})
-  target_include_directories(${MOD_SLUG}.module.reds PUBLIC ${MOD_SLUG}.packed.reds)
-  set_target_properties(${MOD_SLUG}.module.reds PROPERTIES 
-    OUTPUT_NAME ${MOD_SLUG}.module
-    LINKER_LANGUAGE Swift
-    SUFFIX .reds
-  )
 
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
   foreach(FILE ${REDSCRIPT_SOURCE_FILES})
     file(RELATIVE_PATH RELATIVE_PATH "${MOD_REDSCRIPT_DIR}" "${FILE}")
     file(RELATIVE_PATH RELATIVE_SOURCE_PATH "${MOD_SOURCE_DIR}" "${FILE}")
-    # target_sources(${MOD_SLUG}.redscripts PUBLIC ${RELATIVE_SOURCE_PATH})
     message(STATUS "'${RELATIVE_PATH}'")
   endforeach()
 
   list(POP_BACK CMAKE_MESSAGE_INDENT)
 
-  if(NOT PROJECT_IS_TOP_LEVEL)
-    list(APPEND ${MOD_PREFIX}_REDSCRIPT_DEPENDENCIES_SOURCE_FILES ${REDSCRIPT_SOURCE_FILES})
-    set(${MOD_PREFIX}_REDSCRIPT_DEPENDENCIES_SOURCE_FILES ${${MOD_PREFIX}_REDSCRIPT_DEPENDENCIES_SOURCE_FILES} CACHE INTERNAL "Files used in compiling redscript dependencies")
+  enable_language(REDSCRIPT)
+
+  # packed.reds file
+  add_library(${MOD_SLUG}.packed.reds STATIC ${REDSCRIPT_SOURCE_FILES})
+  set_target_properties(${MOD_SLUG}.packed.reds PROPERTIES 
+    OUTPUT_NAME ${MOD_SLUG}.packed
+    LINKER_LANGUAGE Swift
+    SUFFIX .reds
+  )
+  target_include_directories(${MOD_SLUG}.packed.reds PUBLIC ${MOD_REDSCRIPT_DIR})
+
+  source_group("Source Files" FILES ${REDSCRIPT_SOURCE_FILES})
+  add_dependencies(${MOD_SLUG} ${MOD_SLUG}.packed.reds)
+  list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR_PACKED_FILE})
+
+  # module.reds file
+  if(EXISTS "${REDSCRIPT_MODULE_IN_FILE}")
+    configure_file(${REDSCRIPT_MODULE_IN_FILE} ${MOD_SLUG}.${REDSCRIPT_MODULE_FILENAME})
+    add_library(${MOD_SLUG}.module.reds MODULE ${MOD_SLUG}.${REDSCRIPT_MODULE_FILENAME})
+    target_link_libraries(${MOD_SLUG}.module.reds PUBLIC ${MOD_SLUG}.packed.reds)
+    set_target_properties(${MOD_SLUG}.module.reds PROPERTIES 
+      OUTPUT_NAME ${MOD_SLUG}.module
+      LINKER_LANGUAGE Swift
+      SUFFIX .reds
+    )
+    add_dependencies(${MOD_SLUG} ${MOD_SLUG}.module.reds)
+    list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR_MODULE_FILE})
   endif()
-
-  if(NOT DEFINED CMAKE_CI_BUILD)
-    add_custom_command(
-      OUTPUT ${REDSCRIPT_LAST_LINT}
-      DEPENDS ${${MOD_PREFIX}_REDSCRIPT_PREREQ_FILE} ${REDSCRIPT_SOURCE_FILES}
-      COMMAND ${REDSCRIPT_CLI_EXE} lint -s ${MOD_REDSCRIPT_DIR} -b ${${MOD_PREFIX}_REDSCRIPT_PREREQ_FILE} && echo "1" > ${REDSCRIPT_LAST_LINT}
-      COMMENT "Linting redscript against pre-compiled prereqs at ${${MOD_PREFIX}_REDSCRIPT_PREREQ_FILE}"
-      USES_TERMINAL)
-
-    add_custom_target(${MOD_SLUG}_redscript_lint
-      DEPENDS ${${MOD_PREFIX}_REDSCRIPT_PREREQ_FILE}
-      COMMAND ${REDSCRIPT_CLI_EXE} lint -s ${MOD_REDSCRIPT_DIR} -b ${${MOD_PREFIX}_REDSCRIPT_PREREQ_FILE} && echo "1" > ${REDSCRIPT_LAST_LINT}
-      COMMENT "Linting redscript against pre-compiled prereqs at ${${MOD_PREFIX}_REDSCRIPT_PREREQ_FILE}"
-      USES_TERMINAL)
-    set_target_properties(${MOD_SLUG}_redscript_lint PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
-  else()
-    add_custom_command(
-      OUTPUT ${REDSCRIPT_LAST_LINT}
-      COMMAND echo "1" > ${REDSCRIPT_LAST_LINT}
-      USES_TERMINAL)
-    add_custom_target(${MOD_SLUG}_redscript_lint
-      COMMAND echo "1" > ${REDSCRIPT_LAST_LINT}
-      USES_TERMINAL)
-  endif()
-
-  add_custom_command(
-    OUTPUT ${MOD_GAME_DIR_PACKED_FILE}
-    # BYPRODUCTS ${MOD_GAME_DIR_PACKED_FILE}
-    DEPENDS ${MOD_SLUG}_redscript_lint ${REDSCRIPT_SOURCE_FILES}
-    COMMAND ${CMAKE_COMMAND} -D COMMENT_SLUG="//" -D GLOB_EXT="reds" -D HEADER_FILE="${MOD_HEADER_TXT_FILE}" -D PACKED_FILE=${MOD_GAME_DIR_PACKED_FILE} -D SEARCH_FOLDER=${MOD_REDSCRIPT_DIR} -P ${CYBERPUNK_CMAKE_SCRIPTS}/PackFiles.cmake
-    COMMENT "Packing redscript files into one")
-
-  add_custom_target(${MOD_SLUG}_redscript
-    DEPENDS ${REDSCRIPT_LAST_LINT} ${MOD_GAME_DIR_PACKED_FILE}
-    SOURCES ${REDSCRIPT_SOURCE_FILES})
-  set_target_properties(${MOD_SLUG}_redscript PROPERTIES FOLDER "${FOLDER_PREFIX}Redscript")
-  add_dependencies(${MOD_SLUG} ${MOD_SLUG}_redscript)
 
   find_package(Redscript)
 
-  list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR_PACKED_FILE})
   if(NOT ${REDSCRIPT_PACK_INTO_RED4EXT})
     list(APPEND ${MOD_PREFIX}_GAME_DIR_FOLDERS ${MOD_GAME_DIR_REDSCRIPT_MOD_DIR})
   endif()
