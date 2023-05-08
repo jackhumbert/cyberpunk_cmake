@@ -88,17 +88,32 @@ macro(configure_redscript REDSCRIPT_DIR)
   add_library(${MOD_SLUG}.packed.reds STATIC ${REDSCRIPT_SOURCE_FILES})
   set_target_properties(${MOD_SLUG}.packed.reds PROPERTIES 
     OUTPUT_NAME ${MOD_SLUG}.packed
+    LINKER_LANGUAGE Swift
+    # IMPORT_SUFFIX .packed.reds
+    SUFFIX .reds
   )
-  add_library(${MOD_SLUG}.redscripts SHARED ${REDSCRIPT_SOURCE_FILES})
-  set_target_properties(${MOD_SLUG}.redscripts PROPERTIES 
-    OUTPUT_NAME ${MOD_SLUG}
-    IMPORT_SUFFIX .redscripts.bk
-  )
+  target_include_directories(${MOD_SLUG}.packed.reds PUBLIC ${MOD_REDSCRIPT_DIR})
+  # add_library(${MOD_SLUG}.redscripts SHARED ${REDSCRIPT_SOURCE_FILES})
+  # set_target_properties(${MOD_SLUG}.redscripts PROPERTIES 
+  #   OUTPUT_NAME ${MOD_SLUG}
+  #   LINKER_LANGUAGE Swift
+  #   SUFFIX .redscript
+  #   IMPORT_SUFFIX .redscripts.bk
+  # )
   # set_target_properties(${MOD_SLUG}.redscripts PROPERTIES LANGUAGE Redscript)
   source_group("Source Files" FILES ${REDSCRIPT_SOURCE_FILES})
   # target_include_directories(${MOD_SLUG}.redscripts PUBLIC ${MOD_REDSCRIPT_DIR})
   # target_link_options(${MOD_SLUG}.redscripts PRIVATE $<>)
-  add_dependencies(${MOD_SLUG} ${MOD_SLUG}.redscripts)
+  add_dependencies(${MOD_SLUG} ${MOD_SLUG}.packed.reds)
+
+  configure_file(${REDSCRIPT_MODULE_IN_FILE} ${MOD_SLUG}.${REDSCRIPT_MODULE_FILENAME})
+  add_library(${MOD_SLUG}.module.reds MODULE ${MOD_SLUG}.${REDSCRIPT_MODULE_FILENAME})
+  target_include_directories(${MOD_SLUG}.module.reds PUBLIC ${MOD_SLUG}.packed.reds)
+  set_target_properties(${MOD_SLUG}.module.reds PROPERTIES 
+    OUTPUT_NAME ${MOD_SLUG}.module
+    LINKER_LANGUAGE Swift
+    SUFFIX .reds
+  )
 
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
