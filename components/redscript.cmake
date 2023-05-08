@@ -85,11 +85,15 @@ macro(configure_redscript REDSCRIPT_DIR)
   file(GLOB_RECURSE REDSCRIPT_SOURCE_FILES CONFIGURE_DEPENDS ${MOD_REDSCRIPT_DIR}/*.reds LIST_DIRECTORIES false)
 
   enable_language(REDSCRIPT)
-  add_library(${MOD_SLUG}.redscripts ${REDSCRIPT_SOURCE_FILES})
-  set_target_properties(${MOD_SLUG}.redscripts PROPERTIES OUTPUT_NAME ${MOD_SLUG})
+  add_library(${MOD_SLUG}.redscripts SHARED ${REDSCRIPT_SOURCE_FILES})
+  set_target_properties(${MOD_SLUG}.redscripts PROPERTIES 
+    OUTPUT_NAME ${MOD_SLUG}
+    IMPORT_SUFFIX .redscripts.bk
+  )
   # set_target_properties(${MOD_SLUG}.redscripts PROPERTIES LANGUAGE Redscript)
   source_group("Source Files" FILES ${REDSCRIPT_SOURCE_FILES})
-  target_include_directories(${MOD_SLUG}.redscripts PUBLIC ${MOD_REDSCRIPT_DIR})
+  # target_include_directories(${MOD_SLUG}.redscripts PUBLIC ${MOD_REDSCRIPT_DIR})
+  # target_link_options(${MOD_SLUG}.redscripts PRIVATE $<>)
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}.redscripts)
 
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
