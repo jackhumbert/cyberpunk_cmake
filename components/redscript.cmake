@@ -85,6 +85,10 @@ macro(configure_redscript REDSCRIPT_DIR)
   file(GLOB_RECURSE REDSCRIPT_SOURCE_FILES CONFIGURE_DEPENDS ${MOD_REDSCRIPT_DIR}/*.reds LIST_DIRECTORIES false)
 
   enable_language(REDSCRIPT)
+  add_library(${MOD_SLUG}.packed.reds STATIC ${REDSCRIPT_SOURCE_FILES})
+  set_target_properties(${MOD_SLUG}.packed.reds PROPERTIES 
+    OUTPUT_NAME ${MOD_SLUG}.packed
+  )
   add_library(${MOD_SLUG}.redscripts SHARED ${REDSCRIPT_SOURCE_FILES})
   set_target_properties(${MOD_SLUG}.redscripts PROPERTIES 
     OUTPUT_NAME ${MOD_SLUG}
