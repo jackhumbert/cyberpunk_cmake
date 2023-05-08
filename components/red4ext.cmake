@@ -145,6 +145,7 @@ macro(configure_red4ext)
 
   add_custom_command(
     TARGET ${MOD_SLUG}.dll POST_BUILD
+    BYPRODUCTS ${MOD_GAME_DIR_RED4EXT_MOD_DIR}/${MOD_SLUG}.dll
     DEPENDS ${MOD_SLUG}.dll
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:${MOD_SLUG}.dll>
