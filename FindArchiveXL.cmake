@@ -5,7 +5,6 @@ if(NOT DEFINED MOD_ARCHIVE_XL_DEPENDENCY_ADDED)
     file(DOWNLOAD
       https://github.com/psiberx/cp2077-archive-xl/releases/download/v1.4.4/ArchiveXL-1.4.4.zip
       ${MOD_BINARY_DIR}/downloads/archiveXL.zip
-      SHOW_PROGRESS
     )
     file(ARCHIVE_EXTRACT
         INPUT ${MOD_BINARY_DIR}/downloads/archiveXL.zip

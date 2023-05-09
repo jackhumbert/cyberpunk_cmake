@@ -5,7 +5,6 @@ if(NOT DEFINED MOD_TWEAK_XL_DEPENDENCY_ADDED)
     file(DOWNLOAD
     https://github.com/psiberx/cp2077-tweak-xl/releases/download/v1.1.4/TweakXL-1.1.4.zip
       ${MOD_BINARY_DIR}/downloads/tweakXL.zip
-      SHOW_PROGRESS
     )
     file(ARCHIVE_EXTRACT
         INPUT ${MOD_BINARY_DIR}/downloads/tweakXL.zip
