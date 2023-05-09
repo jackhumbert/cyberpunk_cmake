@@ -1,4 +1,3 @@
-set(MOD_GAME_DIR_ARCHIVES_DIR "${MOD_GAME_DIR}/archive/pc/mod")
 
 #[[Configures .archive & .archive.xl files. Accepts any number of files as arguments, like:
 configure_archives(mod.archive mod2.archive mod.archive.xl)
@@ -17,6 +16,12 @@ macro(configure_archives)
   unset(MOD_GAME_DIR_ARCHIVE_XLS)
   message(STATUS "Configuring archives")
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
+
+  if(LOAD_ARCHIVES_FROM_RED4EXT)
+    set(MOD_GAME_DIR_ARCHIVES_DIR "${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG}")
+  else()
+    set(MOD_GAME_DIR_ARCHIVES_DIR "${MOD_GAME_DIR}/archive/pc/mod")
+  endif()
 
   # processes both .archive & .archive.xl files
   foreach(ARCHIVE ${ARCHIVE_FILES})

@@ -15,7 +15,16 @@ macro(configure_tweaks TWEAKS_SOURCE_DIR)
     set(MOD_TWEAKS_SOURCE_DIR ${TWEAKS_DIR_RAW})
   endif()
 
-  set(MOD_GAME_DIR_TWEAKS_PACKED_FILE "${MOD_GAME_DIR}/r6/tweaks/${MOD_SLUG}.yaml")
+  if(LOAD_TWEAKS_FROM_RED4EXT)
+    set(MOD_GAME_DIR_TWEAKS_PACKED_FILE "${MOD_GAME_DIR}/red4ext/plugins/${MOD_SLUG}/tweaks.yaml")
+    target_compile_definitions(${MOD_SLUG}.dll 
+      PRIVATE
+        MOD_PACKED_TWEAKS_FILENAME="tweaks.yaml"
+    )
+  else()
+    set(MOD_GAME_DIR_TWEAKS_PACKED_FILE "${MOD_GAME_DIR}/r6/tweaks/${MOD_SLUG}.yaml")
+  endif()
+  
 
   # file(RELATIVE_PATH TWEAKS_DIR_RELATIVE "${MOD_SOURCE_DIR}" "${MOD_TWEAKS_SOURCE_DIR}")
   message(STATUS "Configuring tweaks files in ${MOD_TWEAKS_SOURCE_DIR}")

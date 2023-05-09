@@ -3,7 +3,12 @@ include(FetchContent)
 if(NOT DEFINED MOD_RED4EXT_DEPENDENCY_ADDED)
   if(NOT EXISTS ${MOD_BINARY_DIR}/downloads/red4ext.zip OR MOD_FORCE_UPDATE_DEPS)
     if(NOT DEFINED MOD_RED4EXT_DOWNLOAD_URL)
-      set(MOD_RED4EXT_DOWNLOAD_URL "https://github.com/WopsS/RED4ext/releases/download/v1.12.0/red4ext_1.12.0.zip")
+      file(DOWNLOAD
+        https://api.github.com/repos/WopsS/RED4ext/releases
+        ${MOD_BINARY_DIR}/downloads/RED4ext_releases.json
+      )
+      file(READ ${MOD_BINARY_DIR}/downloads/RED4ext_releases.json RED4EXT_RELEASES)
+      string(JSON MOD_RED4EXT_DOWNLOAD_URL GET "${RED4EXT_RELEASES}" 0 assets 0 browser_download_url)
     endif()
     file(DOWNLOAD
       ${MOD_RED4EXT_DOWNLOAD_URL}

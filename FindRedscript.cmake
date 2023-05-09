@@ -3,7 +3,12 @@ include(FetchContent)
 if(NOT DEFINED MOD_REDSCRIPT_DEPENDENCY_ADDED)
   if(NOT EXISTS ${MOD_BINARY_DIR}/downloads/redscript.zip OR MOD_FORCE_UPDATE_DEPS)
     if(NOT DEFINED MOD_REDSCRIPT_DOWNLOAD_URL)
-      set(MOD_REDSCRIPT_DOWNLOAD_URL "https://github.com/jac3km4/redscript/releases/download/v0.5.14/redscript-v0.5.14.zip")
+      file(DOWNLOAD
+        https://api.github.com/repos/jac3km4/redscript/releases
+        ${MOD_BINARY_DIR}/downloads/redscript_releases.json
+      )
+      file(READ ${MOD_BINARY_DIR}/downloads/redscript_releases.json REDSCRIPT_RELEASES)
+      string(JSON MOD_REDSCRIPT_DOWNLOAD_URL GET "${REDSCRIPT_RELEASES}" 0 assets 1 browser_download_url)
     endif()
     file(DOWNLOAD
       ${MOD_REDSCRIPT_DOWNLOAD_URL}
