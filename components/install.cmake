@@ -13,9 +13,4 @@ macro(configure_install)
     install(DIRECTORY ${MOD_GAME_DIR_INSTALL_FILES}
       DESTINATION ${CYBERPUNK_2077_GAME_DIR})
   endif()
-  file(WRITE requirements.md "## Requirements\n")
-  foreach(REQUIREMENT ${MOD_REQUIREMENTS})
-    file(APPEND requirements.md "* ${REQUIREMENT}\n")
-  endforeach()
-  
 endmacro()
