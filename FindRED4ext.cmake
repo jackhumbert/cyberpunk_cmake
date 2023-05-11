@@ -1,6 +1,7 @@
 include(FetchContent)
 
 if(NOT DEFINED MOD_RED4EXT_DEPENDENCY_ADDED)
+  list(APPEND MOD_REQUIREMENTS "RED4ext 1.13.1+")
   if(NOT EXISTS ${MOD_BINARY_DIR}/downloads/red4ext.zip OR MOD_FORCE_UPDATE_DEPS)
     if(NOT DEFINED MOD_RED4EXT_DOWNLOAD_URL)
       file(DOWNLOAD
@@ -16,7 +17,7 @@ if(NOT DEFINED MOD_RED4EXT_DEPENDENCY_ADDED)
     )
     file(ARCHIVE_EXTRACT
         INPUT ${MOD_BINARY_DIR}/downloads/red4ext.zip
-        DESTINATION ${TOP_MOD_SOURCE_DIR}/game_dir_prereqs/
+        DESTINATION ${TOP_MOD_SOURCE_DIR}/game_dir_requirements/
     )
   endif()
   set(MOD_RED4EXT_DEPENDENCY_ADDED ON)

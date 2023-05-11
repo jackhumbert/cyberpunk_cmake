@@ -1,6 +1,7 @@
 include(FetchContent)
 
 if(NOT DEFINED MOD_REDSCRIPT_DEPENDENCY_ADDED)
+  list(APPEND MOD_REQUIREMENTS "Redscript 0.5.14+")
   if(NOT EXISTS ${MOD_BINARY_DIR}/downloads/redscript.zip OR MOD_FORCE_UPDATE_DEPS)
     if(NOT DEFINED MOD_REDSCRIPT_DOWNLOAD_URL)
       file(DOWNLOAD
@@ -16,7 +17,7 @@ if(NOT DEFINED MOD_REDSCRIPT_DEPENDENCY_ADDED)
     )
     file(ARCHIVE_EXTRACT
         INPUT ${MOD_BINARY_DIR}/downloads/redscript.zip
-        DESTINATION ${TOP_MOD_SOURCE_DIR}/game_dir_prereqs/
+        DESTINATION ${TOP_MOD_SOURCE_DIR}/game_dir_requirements/
     )
   endif()
   set(MOD_REDSCRIPT_DEPENDENCY_ADDED ON)

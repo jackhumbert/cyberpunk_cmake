@@ -67,8 +67,10 @@ macro(configure_mod)
   set(MOD_SOURCE_DIR "${PROJECT_SOURCE_DIR}")
   set(MOD_TOOLS_DIR "${MOD_SOURCE_DIR}/tools")
 
+  set(MOD_REQUIREMENTS)
+
   if(DEFINED PARENT_MOD_SOURCE_DIR)
-    set(MOD_GAME_DIR "${PARENT_MOD_SOURCE_DIR}/game_dir_prereqs")
+    set(MOD_GAME_DIR "${PARENT_MOD_SOURCE_DIR}/game_dir_requirements")
   else()
     set(MOD_GAME_DIR "${MOD_SOURCE_DIR}/game_dir")
   endif()

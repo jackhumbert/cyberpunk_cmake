@@ -6,6 +6,7 @@ if(NOT TARGET ArchiveXL)
 endif()
 
 if(NOT DEFINED MOD_ARCHIVE_XL_DEPENDENCY_ADDED)
+  list(APPEND MOD_REQUIREMENTS "ArchiveXL 1.4.5+")
   if(NOT EXISTS ${MOD_BINARY_DIR}/downloads/archiveXL.zip OR MOD_FORCE_UPDATE_DEPS)
     file(DOWNLOAD
       https://api.github.com/repos/psiberx/cp2077-archive-xl/releases
@@ -19,7 +20,7 @@ if(NOT DEFINED MOD_ARCHIVE_XL_DEPENDENCY_ADDED)
     )
     file(ARCHIVE_EXTRACT
         INPUT ${MOD_BINARY_DIR}/downloads/archiveXL.zip
-        DESTINATION ${TOP_MOD_SOURCE_DIR}/game_dir_prereqs/
+        DESTINATION ${TOP_MOD_SOURCE_DIR}/game_dir_requirements/
     )
   endif()
   set(MOD_ARCHIVE_XL_DEPENDENCY_ADDED ON)

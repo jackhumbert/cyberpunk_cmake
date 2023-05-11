@@ -5,7 +5,7 @@ Uses these variables:
 Sets these variables:
 * MOD_GAME_DIR_INSTALL_FILES
 ]]
-option(MOD_INSTALL_PREREQS "Install the prereqs as well as the game_dir" OFF)
+option(MOD_INSTALL_PREREQS "Install the requirements as well as the game_dir" OFF)
 macro(configure_install)
   if(${PROJECT_IS_TOP_LEVEL} OR ${MOD_INSTALL_PREREQS})
     file(GLOB MOD_GAME_DIR_INSTALL_FILES ${MOD_GAME_DIR}/*)
@@ -13,4 +13,9 @@ macro(configure_install)
     install(DIRECTORY ${MOD_GAME_DIR_INSTALL_FILES}
       DESTINATION ${CYBERPUNK_2077_GAME_DIR})
   endif()
+  file(WRITE requirements.md "## Requirements\n")
+  foreach(REQUIREMENT ${MOD_REQUIREMENTS})
+    file(APPEND requirements.md "* ${REQUIREMENT}\n")
+  endforeach()
+  
 endmacro()

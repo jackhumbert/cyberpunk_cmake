@@ -6,6 +6,7 @@ if(NOT TARGET TweakXL)
 endif()
 
 if(NOT DEFINED MOD_TWEAK_XL_DEPENDENCY_ADDED)
+  list(APPEND MOD_REQUIREMENTS "TweakXL 1.1.5+")
   if(NOT EXISTS ${MOD_BINARY_DIR}/downloads/tweakXL.zip OR MOD_FORCE_UPDATE_DEPS)
     file(DOWNLOAD
       https://api.github.com/repos/psiberx/cp2077-tweak-xl/releases
@@ -19,7 +20,7 @@ if(NOT DEFINED MOD_TWEAK_XL_DEPENDENCY_ADDED)
     )
     file(ARCHIVE_EXTRACT
         INPUT ${MOD_BINARY_DIR}/downloads/tweakXL.zip
-        DESTINATION ${TOP_MOD_SOURCE_DIR}/game_dir_prereqs/
+        DESTINATION ${TOP_MOD_SOURCE_DIR}/game_dir_requirements/
     )
   endif()
   set(MOD_TWEAK_XL_DEPENDENCY_ADDED ON)
