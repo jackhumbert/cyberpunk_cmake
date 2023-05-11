@@ -151,6 +151,16 @@ macro(configure_red4ext)
     $<TARGET_FILE:${MOD_SLUG}.dll>
     ${MOD_GAME_DIR_RED4EXT_MOD_DIR}/${MOD_SLUG}.dll
     COMMENT "${MOD_SLUG}.dll -> ${MOD_GAME_DIR_RED4EXT_MOD_DIR}/${MOD_SLUG}.dll")
+
+  add_custom_command(
+    TARGET ${MOD_SLUG}.dll POST_BUILD
+    BYPRODUCTS  ${MOD_GAME_DIR_DEBUG}/red4ext/plugins/${MOD_SLUG}/${MOD_SLUG}.pdb
+    DEPENDS ${MOD_SLUG}.dll
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_PDB_FILE:${MOD_SLUG}.dll>
+    ${MOD_GAME_DIR_DEBUG}/red4ext/plugins/${MOD_SLUG}/${MOD_SLUG}.pdb
+    COMMENT "${MOD_SLUG}.pdb -> ${MOD_GAME_DIR_DEBUG}/red4ext/plugins/${MOD_SLUG}/${MOD_SLUG}.pdb")
+    
   add_dependencies(${MOD_SLUG} ${MOD_SLUG}.dll)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
 

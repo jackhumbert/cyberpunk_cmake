@@ -5,8 +5,8 @@ if(NOT TARGET TweakXL)
   target_include_directories(TweakXL INTERFACE deps/tweak_xl/support/red4ext)
 endif()
 
+list(APPEND MOD_REQUIREMENTS "TweakXL 1.1.5+")
 if(NOT DEFINED MOD_TWEAK_XL_DEPENDENCY_ADDED)
-  list(APPEND MOD_REQUIREMENTS "TweakXL 1.1.5+")
   if(NOT EXISTS ${MOD_BINARY_DIR}/downloads/tweakXL.zip OR MOD_FORCE_UPDATE_DEPS)
     file(DOWNLOAD
       https://api.github.com/repos/psiberx/cp2077-tweak-xl/releases

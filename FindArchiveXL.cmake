@@ -5,8 +5,8 @@ if(NOT TARGET ArchiveXL)
   target_include_directories(ArchiveXL INTERFACE deps/archive_xl/support/red4ext)
 endif()
 
+list(APPEND MOD_REQUIREMENTS "ArchiveXL 1.4.5+")
 if(NOT DEFINED MOD_ARCHIVE_XL_DEPENDENCY_ADDED)
-  list(APPEND MOD_REQUIREMENTS "ArchiveXL 1.4.5+")
   if(NOT EXISTS ${MOD_BINARY_DIR}/downloads/archiveXL.zip OR MOD_FORCE_UPDATE_DEPS)
     file(DOWNLOAD
       https://api.github.com/repos/psiberx/cp2077-archive-xl/releases

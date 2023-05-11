@@ -9,8 +9,11 @@ option(MOD_INSTALL_PREREQS "Install the requirements as well as the game_dir" OF
 macro(configure_install)
   if(${PROJECT_IS_TOP_LEVEL} OR ${MOD_INSTALL_PREREQS})
     file(GLOB MOD_GAME_DIR_INSTALL_FILES ${MOD_GAME_DIR}/*)
+    file(GLOB MOD_GAME_DIR_DEBUG_INSTALL_FILES ${MOD_GAME_DIR_DEBUG}/*)
 
     install(DIRECTORY ${MOD_GAME_DIR_INSTALL_FILES}
       DESTINATION ${CYBERPUNK_2077_GAME_DIR})
+    install(DIRECTORY ${MOD_GAME_DIR_DEBUG_INSTALL_FILES}
+        DESTINATION ${CYBERPUNK_2077_GAME_DIR})
   endif()
 endmacro()
