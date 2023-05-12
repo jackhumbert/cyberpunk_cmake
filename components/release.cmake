@@ -37,6 +37,7 @@ macro(configure_release ZIP_FILE)
       DEPENDS ${MOD_SLUG}
       COMMENT "Zipping game_dir for '${MOD_NAME}' ${MOD_VERSION_STR}")
   # endif()
+  list(REMOVE_DUPLICATES MOD_REQUIREMENTS)
   file(WRITE requirements.md "## Requirements\n")
   foreach(REQUIREMENT ${MOD_REQUIREMENTS})
     file(APPEND requirements.md "* ${REQUIREMENT}\n")
