@@ -11,11 +11,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 string(TIMESTAMP CURRENT_YEAR "%Y")
 
-if(${PROJECT_IS_TOP_LEVEL})
-  configure_file(${CYBERPUNK_CMAKE_FILES}/build.yaml ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/build.yaml COPYONLY)
-  configure_file(${CYBERPUNK_CMAKE_FILES}/release.yaml ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/release.yaml COPYONLY)
-endif()
-
 #[[Configures the main `MOD_SLUG` target - can be passed a number of argument name/value pairs, which sets the MOD_<name> variable:
 * NAME
 * SLUG
@@ -40,6 +35,11 @@ macro(configure_mod)
 
   if(NOT DEFINED MOD_PREFIX)
     set(MOD_PREFIX ${MOD_SLUG})
+  endif()
+  
+  if(${PROJECT_IS_TOP_LEVEL})
+    configure_file(${CYBERPUNK_CMAKE_FILES}/build.yaml ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/build.yaml COPYONLY)
+    configure_file(${CYBERPUNK_CMAKE_FILES}/release.yaml ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/release.yaml COPYONLY)
   endif()
 
   if(DEFINED GITHUB_ENV AND ${PROJECT_IS_TOP_LEVEL})
