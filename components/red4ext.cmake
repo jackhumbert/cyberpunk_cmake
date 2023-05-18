@@ -130,6 +130,7 @@ macro(configure_red4ext)
   source_group(TREE "${MOD_RED4EXT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_FILES} ${RC_FILES})
 
   target_include_directories(${MOD_SLUG}.dll PUBLIC ${MOD_RED4EXT_SOURCE_DIR})
+  target_include_directories(${MOD_SLUG}.dll PUBLIC ${CYBERPUNK_CMAKE_INCLUDE})
   target_sources(${MOD_SLUG}.dll PRIVATE ${HEADER_FILES} ${SOURCE_FILES} ${RC_FILES} ${MOD_VERSIONINFO_RC_FILE})
 
   if(EXISTS ${MOD_RED4EXT_SOURCE_DIR}/stdafx.hpp)
