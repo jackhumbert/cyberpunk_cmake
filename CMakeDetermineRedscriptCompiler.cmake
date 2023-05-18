@@ -2,7 +2,7 @@
 
 find_program(CMAKE_REDSCRIPT_COMPILER
   NAMES "redscript-cli.exe"
-  PATHS ${CMAKE_SOURCE_DIR}/tools
+  PATHS ${CYBERPUNK_CMAKE_TOOLS}
 )
 
 mark_as_advanced(CMAKE_REDSCRIPT_COMPILER)
