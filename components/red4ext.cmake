@@ -187,12 +187,21 @@ macro(configure_red4ext_addresses ZOLTAN_SIGNATURES ZOLTAN_ADDRESSES)
   endif()
   message(STATUS "  Addresses file: ${MOD_ZOLTAN_ADDRESSES}")
   if(NOT DEFINED CMAKE_CI_BUILD)
+    set(ZOLTAN_FILES "${HEADER_FILES};${SOURCE_FILES}")
+    list(REMOVE_ITEM ZOLTAN_FILES ${MOD_ZOLTAN_ADDRESSES})
+    # message(STATUS "Zoltan files: ${ZOLTAN_FILES}")
+    add_custom_target(${MOD_SLUG}_zoltan DEPENDS ${ZOLTAN_FILES})
     add_custom_command(
       OUTPUT ${MOD_ZOLTAN_ADDRESSES}
-      DEPENDS ${MOD_ZOLTAN_SIGNATURES}
+      # MAIN_DEPENDENCY ${MOD_SLUG}_zoltan
+      # DEPENDS ${MOD_SLUG}_zoltan
+      # DEPENDS ${MOD_ZOLTAN_SIGNATURES}
+      DEPENDS ${ZOLTAN_FILES}
       COMMAND ${ZOLTAN_CLANG_EXE}
-      ARGS ${MOD_ZOLTAN_SIGNATURES} ${CYBERPUNK_2077_EXE} -f "std=c++20" -f "I${MOD_RED4EXT_SDK_DIR}/include" --c-output "${MOD_ZOLTAN_ADDRESSES}" --safe-addr
+      ARGS ${MOD_RED4EXT_SOURCE_DIR}/ -x ${CYBERPUNK_2077_EXE} -f="-std=c++20" -f="-include stdafx.hpp" -f="-I${MOD_RED4EXT_SDK_DIR}/include" --c-output "${MOD_ZOLTAN_ADDRESSES}" --safe-addr
       COMMENT "Finding binary addresses of declared functions in ${MOD_ZOLTAN_SIGNATURES}"
+      # MAIN_DEPENDENCY ${MOD_ZOLTAN_SIGNATURES}
+      # IMPLICIT_DEPENDS CXX ${MOD_SLUG}_zoltan
     )
 
     add_custom_target(${MOD_SLUG}_addresses DEPENDS ${MOD_ZOLTAN_ADDRESSES})
