@@ -1,73 +1,77 @@
+#pragma once
+
 #include <stdint.h>
 #include <winnt.h>
 #include <map>
 #include <RED4ext/CName.hpp>
 
+#define S_TO_US 1000000
+#define S_TO_NS 1000000000
+
 namespace CyberpunkMod {
 
 struct TimeTracker {
-  LONGLONG Difference() {
-    return Current.QuadPart - Last.QuadPart;
+
+  inline TimeTracker() {
+    QueryPerformanceCounter(&Init);
+    QueryPerformanceFrequency(&Frequency); 
   }
 
-  void Update(LONGLONG elapsedTicks) {
-    recentCallTimes[recentCallTimesIndex++] = elapsedTicks;
-    if (!recentCallTimesIndex) {
-      flipped = true;
-    }
+  inline LONGLONG LoopDifference() {
+    return Second.QuadPart - First.QuadPart;
   }
 
-  LONGLONG Sum(LONGLONG frequency) {
+  inline LONGLONG TotalDifference() {
+    return First.QuadPart - Init.QuadPart;
+  }
+
+  inline void Start(uint32_t printInterval_s) {
+    QueryPerformanceCounter(&First);
+    shouldPrint = TotalDifference() * S_TO_US / Frequency.QuadPart > printInterval_s * S_TO_US;
+  }
+
+  inline LONGLONG End() {
+    QueryPerformanceCounter(&Second);
     LONGLONG sum = 0;
-    auto length = flipped ? 0x10000 : (recentCallTimesIndex + 1);
-    for (uint32_t i = 0; i < length; i++) {
-      sum += recentCallTimes[i];
-    } 
-    sum /= length;
-    sum *= 1000000;
-    sum /= frequency;
+    if (shouldPrint) {
+      sum = recentCallTimes;
+      // sum *= S_TO_US;
+      // sum /= Frequency; // 
+      LONGLONG div = (TotalDifference() * S_TO_US / Frequency.QuadPart);
+      if (div != 0) {
+        sum = sum * S_TO_US / div;
+      } else {
+        sum = -1;
+      }
+      // sum /= m_printInterval_s;
+      Init = First;
+      recentCallTimes = 0;
+      shouldPrint = false;
+    }
+    recentCallTimes += (LoopDifference() * S_TO_US / Frequency.QuadPart);
     return sum;
   }
 
-  LARGE_INTEGER Last;
-  LARGE_INTEGER Current;
-  LONGLONG recentCallTimes[0x10000] = {0};
-  uint16_t recentCallTimesIndex = 0;
-  bool flipped;
+  LARGE_INTEGER Frequency;
+  LARGE_INTEGER Init;
+  LARGE_INTEGER First;
+  LARGE_INTEGER Second;
+  LONGLONG recentCallTimes = 0;
+  bool shouldPrint = false;
 };
 
-std::map<RED4ext::CName, TimeTracker> timeTrackers;
 
 struct Profiler {
-  inline Profiler(RED4ext::CName tracker, uint32_t printInterval_s) : Tracker(tracker) {
-    QueryPerformanceFrequency(&Frequency); 
-    if (timeTrackers.find(Tracker) == timeTrackers.end()) {
-      timeTrackers[Tracker] = TimeTracker();
-    }
-    timeTrackers[Tracker].Last = timeTrackers[Tracker].Current;
-    QueryPerformanceCounter(&timeTrackers[Tracker].Current);
-    if (timeTrackers[Tracker].Difference() > (Frequency.QuadPart * printInterval_s)) {
-      shouldPrint = true;
-    }
-    QueryPerformanceCounter(&StartingTime);
+  inline static std::map<RED4ext::CName, TimeTracker> timeTrackers;
+  inline Profiler(RED4ext::CName tracker, uint32_t printInterval_s) : m_tracker(tracker) {
+    timeTrackers[m_tracker].Start(printInterval_s);
   }
 
-  LONGLONG End() {
-    QueryPerformanceCounter(&EndingTime);
-    LARGE_INTEGER ElapsedMicroseconds;
-    ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
-    timeTrackers[Tracker].Update(ElapsedMicroseconds.QuadPart);
-    if (shouldPrint) {
-      return timeTrackers[Tracker].Sum(Frequency.QuadPart);
-    }
-    return 0;
+  inline LONGLONG End() {
+    return timeTrackers[m_tracker].End();
   }
 
-  RED4ext::CName Tracker;
-  LARGE_INTEGER Frequency;
-  LARGE_INTEGER StartingTime;
-  LARGE_INTEGER EndingTime;
-  bool shouldPrint;
+  RED4ext::CName m_tracker;
 };
 
 } // namespace CyberpunkMod
