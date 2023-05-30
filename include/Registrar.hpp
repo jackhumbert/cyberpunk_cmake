@@ -5,7 +5,9 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <spdlog/spdlog.h>
+#ifdef SPDLOG_COMPILED_LIB
+  #include <spdlog/spdlog.h>
+#endif
 
 /* needs this code to actually do things:
  
@@ -29,9 +31,13 @@ public:
   void **m_original;
 
   virtual void Load(const RED4ext::Sdk *aSdk, RED4ext::PluginHandle aHandle) override {
-    spdlog::info("Attaching {} at 0x{:X}", m_name, m_address);
+    #ifdef SPDLOG_COMPILED_LIB
+      spdlog::info("Attaching {} at 0x{:X}", m_name, m_address);
+    #endif
     while (!aSdk->hooking->Attach(aHandle, RED4EXT_OFFSET_TO_ADDR(this->m_address), this->m_hook, this->m_original)) {
-      spdlog::info("  trying again");
+      #ifdef SPDLOG_COMPILED_LIB
+        spdlog::info("  trying again");
+      #endif
     }
   };
 
