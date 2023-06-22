@@ -1,6 +1,8 @@
 include(FetchContent)
+include(ResolveDependency)
 
 if(NOT TARGET TweakXL)
+  resolve_dependency(deps/tweak_xl)
   add_library(TweakXL INTERFACE)
   target_include_directories(TweakXL INTERFACE deps/tweak_xl/support/red4ext)
 endif()

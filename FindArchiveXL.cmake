@@ -1,6 +1,8 @@
 include(FetchContent)
+include(ResolveDependency)
 
 if(NOT TARGET ArchiveXL)
+  resolve_dependency(deps/archive_xl)
   add_library(ArchiveXL INTERFACE)
   target_include_directories(ArchiveXL INTERFACE deps/archive_xl/support/red4ext)
 endif()
