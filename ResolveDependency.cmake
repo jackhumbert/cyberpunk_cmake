@@ -1,5 +1,5 @@
 macro(resolve_dependency PATH)
-  if(NOT ${CMAKE_CURRENT_SOURCE_DIR}/${PATH}/CMakeLists.txt)
+  if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${PATH}/CMakeLists.txt)
     find_package(Git QUIET)
     if(GIT_FOUND)
       message(STATUS "Cloning ${PATH} into ${CMAKE_CURRENT_SOURCE_DIR}/${PATH}")
