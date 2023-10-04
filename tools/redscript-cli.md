@@ -1,7 +1,7 @@
 # redscript-cli.exe
 
 Redscript/redscript-cli.exe is MIT licensed, the full contents of which can be found below.
-This file's release can be found here: https://github.com/jac3km4/redscript/releases/tag/v0.5.11
+This file's release can be found here: https://github.com/jac3km4/redscript/releases/tag/v0.5.16
 
 ## MIT license
 
