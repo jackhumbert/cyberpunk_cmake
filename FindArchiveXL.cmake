@@ -7,7 +7,7 @@ if(NOT TARGET ArchiveXL)
   target_include_directories(ArchiveXL INTERFACE deps/archive_xl/support/red4ext)
 endif()
 
-list(APPEND MOD_REQUIREMENTS "ArchiveXL 1.4.5+")
+list(APPEND MOD_REQUIREMENTS "ArchiveXL 1.10.0+")
 if(NOT DEFINED MOD_ARCHIVE_XL_DEPENDENCY_ADDED)
   if(NOT EXISTS ${MOD_BINARY_DIR}/downloads/archiveXL.zip OR MOD_FORCE_UPDATE_DEPS)
     file(DOWNLOAD
