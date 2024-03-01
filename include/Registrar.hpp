@@ -34,7 +34,7 @@ public:
     #ifdef SPDLOG_COMPILED_LIB
       spdlog::info("Attaching {} at 0x{:X}", m_name, m_address);
     #endif
-    while (!aSdk->hooking->Attach(aHandle, RED4EXT_OFFSET_TO_ADDR(this->m_address), this->m_hook, this->m_original)) {
+    while (!aSdk->hooking->Attach(aHandle, this->m_address, this->m_hook, this->m_original)) {
       #ifdef SPDLOG_COMPILED_LIB
         spdlog::info("  trying again");
       #endif
@@ -42,7 +42,7 @@ public:
   };
 
   virtual void Unload(const RED4ext::Sdk *aSdk, RED4ext::PluginHandle aHandle) override {
-    aSdk->hooking->Detach(aHandle, RED4EXT_OFFSET_TO_ADDR(this->m_address));
+    aSdk->hooking->Detach(aHandle, this->m_address);
   };
 };
 
@@ -130,7 +130,7 @@ class ModModuleHook : IModModuleHook {
 public: 
   explicit ModModuleHook(std::string name, uintptr_t address, void * hook, void ** original) {
     this->m_name = name;
-    this->m_address = address;
+    this->m_address = RED4EXT_OFFSET_TO_ADDR(address);
     this->m_hook = hook;
     this->m_original = original;
     ModModuleFactory::GetInstance().registerHook(this);
