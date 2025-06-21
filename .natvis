@@ -1,49 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AutoVisualizer
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://schemas.microsoft.com/vstudio/debugger/natvis/2010 file:///c%3A/Program%20Files/Microsoft%20Visual%20Studio/2022/Community/Xml/Schemas/1033/natvis.xsd" xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
-    <Type Name="RED4ext::DynArray&lt;*&gt;">
-        <DisplayString>size={size}</DisplayString>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="RED4ext::DynArray&lt;*&gt;">
+		<AlternativeType Name="RED4ext::DynArray&lt;*,*&gt;"/>
+		<DisplayString>size={size}</DisplayString>
         <Expand>
-            <Item Name="[capacity]">capacity</Item>
-            <Item Name="[size]">size</Item>
+            <Item Name="[capacity]" ExcludeView="simple">capacity</Item>
+            <Item Name="[size]" ExcludeView="simple">size</Item>
             <ArrayItems>
                 <Size>size</Size>
                 <ValuePointer>entries</ValuePointer>
             </ArrayItems>
         </Expand>
     </Type>
+	<Type Name="RED4ext::Map&lt;*,*&gt;">
+		<AlternativeType Name="RED4ext::Map&lt;*,*,*&gt;"/>
+		<DisplayString>size={keys.size}</DisplayString>
+		<Expand>
+			<Item Name="[capacity]" ExcludeView="simple">keys.capacity</Item>
+			<Item Name="[size]" ExcludeView="simple">keys.size</Item>
+			<Item Name="[flags]" ExcludeView="simple">flags</Item>
+
+			<CustomListItems>
+				<Variable Name="i" InitialValue="0" />
+				<Loop>
+					<If Condition="i &gt; keys.size">
+						<Break />
+					</If>
+					<Item Name="{keys[i]}">values[i]</Item>
+					<Exec>i = i + 1</Exec>
+				</Loop>
+			</CustomListItems>
+		</Expand>
+	</Type>
     <Type Name="RED4ext::CString">
         <DisplayString Condition="length &lt;= 0x40000000">"{text.inline_str,sb}"</DisplayString>
         <DisplayString Condition="length &gt; 0x40000000">"{text.str.ptr,sb}"</DisplayString>
     </Type>
     <Type Name="RED4ext::CName">
-        <DisplayString Condition="hash == 0">None</DisplayString>
-        <DisplayString Condition="hash &gt; 0">{ToString,sb}</DisplayString>
+        <DisplayString Condition="hash == 0">n"None"</DisplayString>
+		<DisplayString Condition="hash &gt; 0">{
+			s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->hash == hash ?
+				s_CNames.m_address->entries.entries[s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->index >> 8]->str
+			: (
+				s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->next &amp;&amp; 
+				s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->next->hash == hash ?
+					s_CNames.m_address->entries.entries[s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->next->index >> 8]->str
+				: (
+					s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->next->next &amp;&amp; 
+					s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->next->next->hash == hash ?
+						s_CNames.m_address->entries.entries[s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->next->next->index >> 8]->str
+					: (
+					
+						s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->next->next->next &amp;&amp; 
+						s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->next->next->next->hash == hash ?
+							s_CNames.m_address->entries.entries[s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->next->next->next->index >> 8]->str
+						:
+						0
+					)
+				)
+			)
+			,s}</DisplayString>
+		
+		<Expand>
+			<!--<Item Name="index" Condition="hash &gt; 0">s_CNames.m_address->hashes[hash % 0x7FFFF]->index >> 8</Item>-->
+			<!--<Item Name="[hash]">hash</Item>-->
+			<CustomListItems>
+				<Variable Name="entries" InitialValue="s_CNames.m_address->entries.entries" />
+				<Variable Name="name_ptr" InitialValue="s_CNames.m_address->hashes[hash &amp; 0x7FFFF]" />
+				<Variable Name="num_entries" InitialValue="s_CNames.m_address->entries.size" />
+				<Loop>
+					<If Condition="name_ptr == nullptr">
+						<Item Name="[hash]">hash</Item>
+						<Item Name="start_idx">hash &amp; 0x7FFFF</Item>
+						<Item Name="string">"Couldn't find"</Item>
+						<Break />
+					</If>
+					<If Condition="name_ptr->hash == hash">
+						<Item Name="string">entries[name_ptr->index >> 8]->str,s</Item>
+						<Break />
+					</If>
+					<Exec>name_ptr = name_ptr->next</Exec>
+				</Loop>
+			</CustomListItems>
+		</Expand>
     </Type>
-    <Type Name="RED4ext::HashMap&lt;*,*&gt;">
-        <DisplayString>size={m_size}</DisplayString>
+    <Type Name="RED4ext::HashMap&lt;*,*,*&gt;">
+        <DisplayString>size={size}</DisplayString>
         <Expand>
-            <CustomListItems MaxItemsPerView="5000">
-                <Variable Name="index" InitialValue="0" />
-                <Variable Name="idx" InitialValue="0" />
+			<Item Name="[capacity]" ExcludeView="simple">nodeList.capacity</Item>
+			<Item Name="[size]" ExcludeView="simple">nodeList.size</Item>
+            <CustomListItems MaxItemsPerView="10">
+                <Variable Name="index" InitialValue="0UL" />
+                <Variable Name="idx" InitialValue="0UL" />
 
-                <Size>m_capacity</Size>
                 <Loop>
-                    <Exec>idx = *(indexTable + index)</Exec>
-                    <Loop>
-                        <Break Condition="idx == 0xFFFFFFFF" />
-                        <!-- <Item Name="{index}:{idx}">((uint64_t)m_pool.m_buffer + (m_pool.m_blockSize * idx))</Item> -->
-                        <Item Name="{*($T1*)(((uint64_t)m_pool.m_buffer + (m_pool.m_blockSize * idx))+8)}">($T2*)(((uint64_t)m_pool.m_buffer + (m_pool.m_blockSize * idx))+16)</Item>
-                        <Exec>idx = *(uint32_t*)((uint64_t)m_pool.m_buffer + (m_pool.m_blockSize * idx))</Exec>
+					<Break Condition="index &gt;= capacity" />
+					<Exec>idx = indexTable[index]</Exec>
+                    <Loop Condition="idx != 0xFFFFFFFF">
+						<Item Name="{*($T1*)((uintptr_t)&amp;nodeList.nodes[idx] + 8)}">
+							*($T2*)((uintptr_t)&amp;nodeList.nodes[idx] + 8 + sizeof($T1))
+						</Item>
+						<Exec>idx = *(uint32_t*)((uintptr_t)&amp;nodeList.nodes[idx])</Exec>
+					    <Break Condition="idx == 0xFFFFFFFF" />
                     </Loop>
-                    <!--
-                    <Loop>
-                        <Break Condition="idx == 0xFFFFFFFF" />
-                        <Item>m_pool.m_buffer + (m_pool.m_blockSize * idx)</Item>
-                        <Exec>idx = *(m_pool.m_buffer + (m_pool.m_blockSize * idx))</Exec>
-                    </Loop> -->
-                    <Exec>index += 1</Exec>
+                    <Exec>index = index + 1</Exec>
                 </Loop>
             </CustomListItems>
         </Expand>
