@@ -34,4 +34,4 @@ public:
     // red::memory::DynamicLinearAllocator dynamicLinearAllocator; // 400040
 };
 
-const UniversalRelocPtr<NameRegistry> s_CNames(1913530389);
+const RED4ext::UniversalRelocPtr<NameRegistry> s_CNames(1913530389);
