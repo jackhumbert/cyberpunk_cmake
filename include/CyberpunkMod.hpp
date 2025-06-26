@@ -3,7 +3,8 @@
 #include <stdint.h>
 #include <winnt.h>
 #include <map>
-#include <RED4ext/CName.hpp>
+#include "CNames.hpp"
+#include "Registrar.hpp"
 
 #define S_TO_US 1000000
 #define S_TO_NS 1000000000
