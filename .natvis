@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="RED4ext::FixedPoint">
+		<DisplayString>value={(float)Bits / (2 &lt;&lt; 16)}</DisplayString>
+  </Type>
 	<Type Name="RED4ext::DynArray&lt;*&gt;">
 		<AlternativeType Name="RED4ext::DynArray&lt;*,*&gt;"/>
-		<DisplayString>size={size}</DisplayString>
+		<DisplayString>size={size}, capacity={capacity}</DisplayString>
         <Expand>
             <Item Name="[capacity]" ExcludeView="simple">capacity</Item>
             <Item Name="[size]" ExcludeView="simple">size</Item>
@@ -14,7 +17,7 @@
     </Type>
 	<Type Name="RED4ext::Map&lt;*,*&gt;">
 		<AlternativeType Name="RED4ext::Map&lt;*,*,*&gt;"/>
-		<DisplayString>size={keys.size}</DisplayString>
+		<DisplayString>size={keys.size}, capacity={keys.capacity}</DisplayString>
 		<Expand>
 			<Item Name="[capacity]" ExcludeView="simple">keys.capacity</Item>
 			<Item Name="[size]" ExcludeView="simple">keys.size</Item>
