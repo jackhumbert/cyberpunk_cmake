@@ -3,6 +3,9 @@
 	<Type Name="RED4ext::FixedPoint">
 		<DisplayString>value={(float)Bits / (2 &lt;&lt; 16)}</DisplayString>
   </Type>
+	<Type Name="RED4ext::ent::IComponent">
+		<DisplayString>name={name}</DisplayString>
+  </Type>
 	<Type Name="RED4ext::DynArray&lt;*&gt;">
 		<AlternativeType Name="RED4ext::DynArray&lt;*,*&gt;"/>
 		<DisplayString>size={size}, capacity={capacity}</DisplayString>
@@ -40,6 +43,7 @@
         <DisplayString Condition="length &gt; 0x40000000">"{text.str.ptr,sb}"</DisplayString>
     </Type>
     <Type Name="RED4ext::CName">
+			<AlternativeType Name="RED4ext::ResourcePath"/>
         <DisplayString Condition="hash == 0">n"None"</DisplayString>
 		<DisplayString Condition="hash &gt; 0">{
 			s_CNames.m_address->hashes[hash &amp; 0x7FFFF]->hash == hash ?
