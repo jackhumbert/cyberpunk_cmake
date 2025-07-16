@@ -3,6 +3,11 @@
 	<Type Name="RED4ext::FixedPoint">
 		<DisplayString>value={(float)Bits / (2 &lt;&lt; 16)}</DisplayString>
   </Type>
+	<Type Name="RED4ext::SharedPtrWithAccess&lt;*&gt;">		
+		<Expand>
+			<Item Name="[instance]">instance</Item>
+		</Expand>
+  </Type>
 	<Type Name="RED4ext::ent::IComponent">
 		<DisplayString>name={name}</DisplayString>
   </Type>
