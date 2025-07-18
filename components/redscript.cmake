@@ -100,7 +100,7 @@ macro(configure_redscript REDSCRIPT_DIR)
     list(APPEND ${MOD_PREFIX}_GAME_DIR_FILES ${MOD_GAME_DIR_MODULE_FILE})
   endif()
 
-  # find_package(Redscript)
+  find_package(Redscript)
 
   if(NOT ${LOAD_REDSCRIPT_FROM_RED4EXT})
     list(APPEND ${MOD_PREFIX}_GAME_DIR_FOLDERS ${MOD_GAME_DIR_REDSCRIPT_MOD_DIR})
