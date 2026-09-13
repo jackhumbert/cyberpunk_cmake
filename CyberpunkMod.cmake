@@ -39,9 +39,14 @@ macro(configure_mod)
     set(MOD_PREFIX ${MOD_SLUG})
   endif()
   
+  # Seed CI workflows for a new mod, but never overwrite ones the repo already has
+  # (they carry per-mod steps such as the Nexus Mods upload).
   if(${PROJECT_IS_TOP_LEVEL})
-    configure_file(${CYBERPUNK_CMAKE_FILES}/build.yaml ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/build.yaml COPYONLY)
-    configure_file(${CYBERPUNK_CMAKE_FILES}/release.yaml ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/release.yaml COPYONLY)
+    foreach(_WORKFLOW build.yaml release.yaml)
+      if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/${_WORKFLOW})
+        configure_file(${CYBERPUNK_CMAKE_FILES}/${_WORKFLOW} ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/${_WORKFLOW} COPYONLY)
+      endif()
+    endforeach()
   endif()
 
   if(DEFINED GITHUB_ENV AND ${PROJECT_IS_TOP_LEVEL})

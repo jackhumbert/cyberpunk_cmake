@@ -14,9 +14,10 @@ jobs:
       CHANGELOG_FILE: ${{ github.workspace }}-CHANGES.md
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
+          fetch-depth: 0
       - uses: ilammy/msvc-dev-cmd@v1.12.1
         with:
           arch: amd64
